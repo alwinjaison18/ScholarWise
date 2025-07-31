@@ -1,0 +1,52 @@
+{
+  "name": "scholarship-portal-backend",
+  "version": "1.0.0",
+  "description": "Backend API for scholarship portal with web scraping capabilities",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "production-deploy": "node production-deployment.js",
+    "production-scrape": "node src/scrapers/productionAIScraper.js",
+    "compliance-test": "node production-compliance-test.js",
+    "utils": "node production-utils.js",
+    "status": "node production-utils.js check",
+    "count": "node production-utils.js count",
+    "monitor": "node production-utils.js monitor",
+    "system-check": "node production-utils.js system-check",
+    "scrape": "node production-utils.js scrape"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "axios": "^1.6.2",
+    "bcryptjs": "^3.0.2",
+    "chalk": "^5.3.0",
+    "cheerio": "^1.0.0-rc.12",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "express-session": "^1.18.2",
+    "google-auth-library": "^10.2.0",
+    "joi": "^17.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "natural": "^8.1.0",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.1",
+    "puppeteer": "^24.10.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sentiment": "^5.0.2",
+    "validator": "^13.15.15",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
