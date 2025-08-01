@@ -1,4 +1,12 @@
+export { default as LandingPage } from "./LandingPage";
 export { default as HomePage } from "./HomePage";
 export { default as ScholarshipsPage } from "./ScholarshipsPage";
 export { default as ScholarshipDetailsPage } from "./ScholarshipDetailsPage";
 export { default as AdminDashboard } from "./AdminDashboard";
+export { default as EnhancedHomePage } from "./EnhancedHomePage";
+export { default as EnhancedAdminDashboard } from "./EnhancedAdminDashboard";
+export { default as Login } from "./Login";
+export { default as Register } from "./Register";
+export { default as Dashboard } from "./Dashboard";
+export { default as SavedPage } from "./SavedPage";
+export { default as AnalyticsPage } from "./AnalyticsPage";
