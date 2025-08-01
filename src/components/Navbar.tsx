@@ -97,7 +97,7 @@ const Navbar: React.FC = () => {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-200">
-                    ScholarHub India
+                    ScholarWise India
                   </span>
                   <span className="text-xs text-gray-500 hidden sm:block">
                     AI-Powered Scholarships
@@ -148,7 +148,7 @@ const Navbar: React.FC = () => {
                 })}
 
                 {/* Admin Section (if user has admin email) */}
-                {user?.email === "admin@scholarhub.com" && (
+                {user?.email === "admin@ScholarWise.com" && (
                   <div className="ml-2 pl-2 border-l border-gray-200">
                     {adminItems.map((item) => {
                       const Icon = item.icon;
@@ -351,7 +351,7 @@ const Navbar: React.FC = () => {
               })}
 
               {/* Admin Section for Mobile */}
-              {user?.email === "admin@scholarhub.com" && (
+              {user?.email === "admin@ScholarWise.com" && (
                 <div className="border-t border-gray-200 pt-4 mt-4">
                   {adminItems.map((item) => {
                     const Icon = item.icon;

@@ -61,7 +61,7 @@ const LandingPage: React.FC = () => {
     {
       name: "Priya Sharma",
       university: "IIT Delhi",
-      text: "ScholarHub helped me find the perfect scholarship that covered my entire engineering degree. The process was so smooth!",
+      text: "ScholarWise helped me find the perfect scholarship that covered my entire engineering degree. The process was so smooth!",
       amount: "₹8,00,000",
     },
     {
@@ -73,7 +73,7 @@ const LandingPage: React.FC = () => {
     {
       name: "Sneha Reddy",
       university: "BITS Pilani",
-      text: "From application to approval, ScholarHub guided me every step of the way. Highly recommended!",
+      text: "From application to approval, ScholarWise guided me every step of the way. Highly recommended!",
       amount: "₹6,50,000",
     },
   ];
@@ -202,7 +202,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Students Choose ScholarHub
+              Why Students Choose ScholarWise
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Experience the most advanced scholarship discovery platform
@@ -306,7 +306,7 @@ const LandingPage: React.FC = () => {
           </h2>
           <p className="text-xl text-blue-100 mb-8">
             Join thousands of students who've already secured their educational
-            funding through ScholarHub
+            funding through ScholarWise
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

@@ -39,27 +39,27 @@ const Footer: React.FC = () => {
   const socialLinks = [
     {
       icon: Twitter,
-      href: "https://twitter.com/scholarhubindia",
+      href: "https://twitter.com/ScholarWiseindia",
       label: "Twitter",
     },
     {
       icon: Facebook,
-      href: "https://facebook.com/scholarhubindia",
+      href: "https://facebook.com/ScholarWiseindia",
       label: "Facebook",
     },
     {
       icon: Instagram,
-      href: "https://instagram.com/scholarhubindia",
+      href: "https://instagram.com/ScholarWiseindia",
       label: "Instagram",
     },
     {
       icon: Linkedin,
-      href: "https://linkedin.com/company/scholarhubindia",
+      href: "https://linkedin.com/company/ScholarWiseindia",
       label: "LinkedIn",
     },
     {
       icon: Github,
-      href: "https://github.com/scholarhubindia",
+      href: "https://github.com/ScholarWiseindia",
       label: "GitHub",
     },
   ];
@@ -138,7 +138,7 @@ const Footer: React.FC = () => {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-bold text-xl group-hover:text-blue-300 transition-colors duration-200">
-                    ScholarHub India
+                    ScholarWise India
                   </span>
                   <span className="text-xs text-blue-300">
                     AI-Powered Scholarship Platform
@@ -200,10 +200,10 @@ const Footer: React.FC = () => {
                   <div>
                     <div className="text-sm text-gray-400">Email Us</div>
                     <a
-                      href="mailto:info@scholarhub.in"
+                      href="mailto:info@ScholarWise.in"
                       className="text-white hover:text-blue-300 transition-colors"
                     >
-                      info@scholarhub.in
+                      info@ScholarWise.in
                     </a>
                   </div>
                 </div>
@@ -324,7 +324,7 @@ const Footer: React.FC = () => {
             {/* Copyright and Credits */}
             <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-4">
               <div className="text-gray-400 text-sm">
-                © {currentYear} ScholarHub India. All rights reserved.
+                © {currentYear} ScholarWise India. All rights reserved.
               </div>
               <div className="flex items-center space-x-2 text-sm">
                 <span className="text-gray-400">Made with</span>

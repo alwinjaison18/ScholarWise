@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-900">
-                    Welcome to ScholarHub India!
+                    Welcome to ScholarWise India!
                   </p>
                   <p className="text-xs text-gray-500">
                     Start by completing your profile

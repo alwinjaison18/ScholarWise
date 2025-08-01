@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   RefreshCw,
   Activity,
+  Database,
   Globe,
   Heart,
   TrendingUp,
@@ -10,6 +11,7 @@ import {
   CheckCircle,
   AlertCircle,
   Clock,
+  Eye,
   Monitor,
   Wifi,
   WifiOff,
@@ -100,8 +102,8 @@ const EnhancedAdminDashboard: React.FC = () => {
 
   const fetchCircuitBreakers = async () => {
     try {
-      // Circuit breakers data - mock for now since API method doesn't exist
-      setCircuitBreakers([]);
+      const data = await scholarshipService.getCircuitBreakers();
+      setCircuitBreakers(data);
     } catch (err) {
       console.error("Circuit breakers fetch error:", err);
     }
@@ -109,7 +111,7 @@ const EnhancedAdminDashboard: React.FC = () => {
 
   const fetchMetrics = async () => {
     try {
-      const data = await scholarshipService.getSystemMetrics();
+      const data = await scholarshipService.getMetrics();
       setMetrics(data);
     } catch (err) {
       console.error("Metrics fetch error:", err);
@@ -202,6 +204,12 @@ const EnhancedAdminDashboard: React.FC = () => {
     if (isOpen) return "text-red-500 bg-red-50";
     if (failureCount > 0) return "text-yellow-500 bg-yellow-50";
     return "text-green-500 bg-green-50";
+  };
+
+  const formatUptime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
   };
 
   const formatMemory = (bytes: number) => {
@@ -550,48 +558,45 @@ const EnhancedAdminDashboard: React.FC = () => {
               </div>
             </div>
             <div className="space-y-4">
-              {scrapingStatus?.details && scrapingStatus.details.length > 0 ? (
-                scrapingStatus.details.map((scraper: any, index: number) => (
-                  <div key={index} className="p-4 bg-gray-50 rounded-xl border">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">
-                          {scraper.name || `Scraper ${index + 1}`}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          {scraper.url || "No URL specified"}
+              {scrapingStatus?.status?.details?.length > 0 ? (
+                scrapingStatus.status.details.map(
+                  (scraper: any, index: number) => (
+                    <div
+                      key={index}
+                      className="p-4 bg-gray-50 rounded-xl border"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold text-gray-900">
+                            {scraper.name}
+                          </h4>
+                          <p className="text-sm text-gray-600">{scraper.url}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(scraper.status === "active")}
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              scraper.status === "active"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {scraper.status}
+                          </span>
+                        </div>
+                      </div>
+                      {scraper.lastRun && (
+                        <p className="text-xs text-gray-500 mt-2">
+                          Last run: {new Date(scraper.lastRun).toLocaleString()}
                         </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {getStatusIcon(
-                          scraper.status === "active" || scraper.isHealthy
-                        )}
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            scraper.status === "active" || scraper.isHealthy
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {scraper.status ||
-                            (scraper.isHealthy ? "Active" : "Inactive")}
-                        </span>
-                      </div>
+                      )}
                     </div>
-                    {scraper.lastRun && (
-                      <p className="text-xs text-gray-500 mt-2">
-                        Last run: {new Date(scraper.lastRun).toLocaleString()}
-                      </p>
-                    )}
-                  </div>
-                ))
+                  )
+                )
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <Globe className="h-12 w-12 mx-auto mb-3 text-gray-300" />
                   <p>No scraper data available</p>
-                  <p className="text-xs mt-1">
-                    Run the scraping system to see active scrapers
-                  </p>
                 </div>
               )}
             </div>

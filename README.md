@@ -29,6 +29,7 @@ cd backend && npm run dev
 ```
 
 **Access URLs:**
+
 - Frontend: http://localhost:5174
 - Backend API: http://localhost:5001
 - Admin Dashboard: http://localhost:5174/admin
@@ -67,41 +68,48 @@ ScholarWise/
 ## 🔐 Authentication System
 
 ### Supported Methods
+
 1. **Google OAuth 2.0** - One-click sign-in
 2. **Traditional Email/Password** - Standard registration
 3. **Session Management** - Secure JWT tokens
 
 ### User Roles
+
 - **Student** - Regular user access
-- **Admin** - Full system management (admin@scholarhub.com)
+- **Admin** - Full system management (admin@ScholarWise.com)
 
 ## 🎨 Core Pages & Features
 
 ### 🏠 **Enhanced Home Page**
+
 - Hero section with search
 - Featured scholarships
 - Quick stats and categories
 - Call-to-action sections
 
 ### 🔍 **Scholarships Discovery**
+
 - AI-powered search and filtering
 - Real-time data from verified sources
 - Advanced filtering by category, amount, deadline
 - Grid/list view options
 
 ### 📄 **Scholarship Details**
+
 - Comprehensive information display
 - Multiple save buttons with state management
 - Application link validation
 - Responsive design with sticky sidebar
 
 ### 💾 **Saved Scholarships**
+
 - Personal bookmark management
 - Search and filter saved items
 - Deadline tracking
 - Remove functionality
 
 ### 📊 **Analytics Dashboard**
+
 - Performance metrics tracking
 - Financial impact analysis
 - Category distribution charts
@@ -109,6 +117,7 @@ ScholarWise/
 - Actionable insights and recommendations
 
 ### 🔧 **Admin Dashboard**
+
 - Real-time system monitoring
 - Scraper status and health checks
 - Circuit breaker management
@@ -118,12 +127,14 @@ ScholarWise/
 ## 🤖 AI-Powered Scraping System
 
 ### Core Principles
+
 - **LIVE DATA ONLY** - No mock/sample data ever
 - **Intelligent Analysis** - AI-powered content detection
 - **Adaptive Scraping** - Learns from website structure changes
 - **Quality Validation** - Mandatory link verification
 
 ### Link Validation Process
+
 1. **HTTP Status Check** - Must return 200 OK
 2. **Content Relevance** - Page content must match scholarship
 3. **Application Form Detection** - Must contain actual application mechanism
@@ -131,6 +142,7 @@ ScholarWise/
 5. **Real-time Monitoring** - Daily health checks
 
 ### Scraper Features
+
 - **Circuit Breakers** - Automatic failure protection
 - **Rate Limiting** - Respectful scraping patterns
 - **Error Recovery** - Smart retry mechanisms
@@ -139,6 +151,7 @@ ScholarWise/
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary**: Blue gradient (#3B82F6 to #1D4ED8)
 - **Secondary**: Purple gradient (#8B5CF6 to #7C3AED)
 - **Accent**: Pink gradient (#EC4899 to #DB2777)
@@ -147,6 +160,7 @@ ScholarWise/
 - **Error**: Red (#EF4444)
 
 ### UI Components
+
 - **Glass Morphism** - Backdrop blur effects
 - **Gradient Backgrounds** - Multi-color transitions
 - **Interactive Elements** - Hover and focus states
@@ -155,6 +169,7 @@ ScholarWise/
 ## 🛠️ Technical Stack
 
 ### Frontend
+
 - **React 18** with TypeScript
 - **Vite** for fast development
 - **Tailwind CSS** for styling
@@ -163,6 +178,7 @@ ScholarWise/
 - **React Hot Toast** for notifications
 
 ### Backend
+
 - **Node.js** with Express
 - **MongoDB** with Mongoose
 - **JWT** for authentication
@@ -171,6 +187,7 @@ ScholarWise/
 - **Puppeteer** for dynamic scraping
 
 ### Development Tools
+
 - **ESLint** for code quality
 - **TypeScript** for type safety
 - **Git** for version control
@@ -181,6 +198,7 @@ ScholarWise/
 ### Required Environment Variables
 
 **Backend (.env):**
+
 ```env
 NODE_ENV=development
 PORT=5001
@@ -192,6 +210,7 @@ SESSION_SECRET=your-session-secret
 ```
 
 ### Database Setup
+
 ```bash
 # MongoDB connection required
 # Default: mongodb://localhost:27017/scholarwise
@@ -200,6 +219,7 @@ SESSION_SECRET=your-session-secret
 ## 🚀 Deployment
 
 ### Development
+
 ```bash
 npm run dev          # Start both frontend and backend
 npm run frontend     # Frontend only
@@ -207,6 +227,7 @@ npm run backend      # Backend only
 ```
 
 ### Production
+
 ```bash
 npm run build        # Build for production
 npm run start        # Start production server
@@ -215,6 +236,7 @@ npm run start        # Start production server
 ## 🧪 Testing
 
 ### Manual Testing Checklist
+
 - [ ] Authentication (Google + Traditional)
 - [ ] Scholarship search and filtering
 - [ ] Save/unsave functionality
@@ -224,6 +246,7 @@ npm run start        # Start production server
 - [ ] Mobile responsiveness
 
 ### Automated Testing
+
 ```bash
 npm run test         # Run test suite
 npm run test:coverage # Coverage report
@@ -232,18 +255,21 @@ npm run test:coverage # Coverage report
 ## 🔧 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `GET /api/auth/google` - Google OAuth
 - `POST /api/auth/logout` - User logout
 
 ### Scholarships
+
 - `GET /api/scholarships` - List scholarships
 - `GET /api/scholarships/:id` - Get specific scholarship
 - `POST /api/scholarships/scrape` - Trigger scraping
 - `GET /api/scholarships/status` - Scraping status
 
 ### Admin
+
 - `GET /api/admin/metrics` - System metrics
 - `GET /api/admin/health` - Health check
 - `POST /api/admin/reset-breakers` - Reset circuit breakers
@@ -251,6 +277,7 @@ npm run test:coverage # Coverage report
 ## 🎯 Key Accomplishments
 
 ### ✅ Complete Feature Set
+
 - Comprehensive scholarship discovery platform
 - Real-time AI-powered scraping system
 - Advanced analytics and insights
@@ -258,6 +285,7 @@ npm run test:coverage # Coverage report
 - Modern responsive design
 
 ### ✅ Production Ready
+
 - Zero mock data - live data only
 - Mandatory link validation (≥70 score)
 - Robust error handling
@@ -265,6 +293,7 @@ npm run test:coverage # Coverage report
 - Performance optimizations
 
 ### ✅ User Experience
+
 - Intuitive navigation and design
 - Mobile-first responsive layout
 - Fast loading and smooth interactions
@@ -276,6 +305,7 @@ npm run test:coverage # Coverage report
 **⚠️ NEVER DELETE - Required for functionality:**
 
 ### Frontend Core
+
 - `index.html` - Main HTML entry point
 - `src/main.tsx` - React application entry
 - `src/App.tsx` - Main React component
@@ -283,11 +313,13 @@ npm run test:coverage # Coverage report
 - `package.json` - Dependencies and scripts
 
 ### Backend Core
+
 - `backend/src/server.js` - Main server file
 - `backend/package.json` - Dependencies
 - `backend/.env` - Environment configuration
 
 ### Configuration
+
 - `tsconfig.json` - TypeScript configuration
 - `tailwind.config.js` - Tailwind CSS setup
 - `vite.config.ts` - Vite configuration
@@ -317,13 +349,17 @@ This project is licensed under the MIT License. See LICENSE file for details.
 cd backend && npm install
 
 # Set up environment
+
 cp backend/.env.example backend/.env
+
 # Edit .env with your MongoDB URI and Google OAuth credentials
 
 # Start development
-npm run dev          # Frontend (port 5174)
-cd backend && npm run dev    # Backend (port 5001)
-```
+
+npm run dev # Frontend (port 5174)
+cd backend && npm run dev # Backend (port 5001)
+
+````
 
 ## � Authentication System
 
@@ -355,7 +391,7 @@ For detailed setup, API reference, deployment guide, and technical documentation
 npm run scrape       # Run production scrapers
 npm run status       # Check system status
 npm run monitor      # Monitor link health
-```
+````
 
 ## 🎯 Current Status
 
@@ -655,7 +691,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 
-1. Check the [Issues](https://github.com/yourusername/scholarhub-india/issues) page
+1. Check the [Issues](https://github.com/yourusername/ScholarWise-india/issues) page
 2. Create a new issue with detailed information
 3. Contact the maintainers
 

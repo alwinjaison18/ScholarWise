@@ -539,7 +539,7 @@ const ScholarshipDetailsPage: React.FC = () => {
                     <div className="flex items-center gap-3 text-sm">
                       <Mail className="h-4 w-4 text-gray-500" />
                       <span className="text-gray-700">
-                        support@scholarhub.in
+                        support@ScholarWise.in
                       </span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
