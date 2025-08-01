@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import type { CredentialResponse } from '@react-oauth/google';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import type { CredentialResponse } from "@react-oauth/google";
 
 interface User {
   _id: string;
@@ -51,29 +51,31 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = 'http://localhost:5000/api';
+  const API_BASE = "http://localhost:5001/api";
 
   // Initialize auth state from localStorage
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const storedToken = localStorage.getItem('token');
+        const storedToken = localStorage.getItem("token");
         if (storedToken) {
           setToken(storedToken);
           await fetchUser(storedToken);
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
+        console.error("Auth initialization error:", error);
         logout();
       } finally {
         setLoading(false);
@@ -87,8 +89,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await fetch(`${API_BASE}/auth/me`, {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -96,10 +98,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const data = await response.json();
         setUser(data.data.user);
       } else {
-        throw new Error('Failed to fetch user');
+        throw new Error("Failed to fetch user");
       }
     } catch (error) {
-      console.error('Fetch user error:', error);
+      console.error("Fetch user error:", error);
       logout();
     }
   };
@@ -108,9 +110,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
@@ -121,14 +123,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { user, token: authToken, refreshToken } = data.data;
         setUser(user);
         setToken(authToken);
-        localStorage.setItem('token', authToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        Cookies.set('token', authToken, { expires: 7 });
+        localStorage.setItem("token", authToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        Cookies.set("token", authToken, { expires: 7 });
       } else {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || "Login failed");
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -139,9 +141,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE}/auth/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
@@ -152,14 +154,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { user, token: authToken, refreshToken } = data.data;
         setUser(user);
         setToken(authToken);
-        localStorage.setItem('token', authToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        Cookies.set('token', authToken, { expires: 7 });
+        localStorage.setItem("token", authToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        Cookies.set("token", authToken, { expires: 7 });
       } else {
-        throw new Error(data.message || 'Registration failed');
+        throw new Error(data.message || "Registration failed");
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -170,13 +172,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE}/auth/google/callback`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           credential: credential.credential,
-          clientId: credential.clientId 
+          clientId: credential.clientId,
         }),
       });
 
@@ -186,14 +188,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { user, token: authToken, refreshToken } = data.data;
         setUser(user);
         setToken(authToken);
-        localStorage.setItem('token', authToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        Cookies.set('token', authToken, { expires: 7 });
+        localStorage.setItem("token", authToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        Cookies.set("token", authToken, { expires: 7 });
       } else {
-        throw new Error(data.message || 'Google login failed');
+        throw new Error(data.message || "Google login failed");
       }
     } catch (error) {
-      console.error('Google login error:', error);
+      console.error("Google login error:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -203,20 +205,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    Cookies.remove('token');
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    Cookies.remove("token");
   };
 
   const updateProfile = async (data: Partial<User>) => {
     try {
-      if (!token) throw new Error('No authentication token');
+      if (!token) throw new Error("No authentication token");
 
       const response = await fetch(`${API_BASE}/auth/profile`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
@@ -226,10 +228,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (response.ok) {
         setUser(result.data.user);
       } else {
-        throw new Error(result.message || 'Profile update failed');
+        throw new Error(result.message || "Profile update failed");
       }
     } catch (error) {
-      console.error('Profile update error:', error);
+      console.error("Profile update error:", error);
       throw error;
     }
   };

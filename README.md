@@ -1,15 +1,17 @@
-# ScholarHub India - Production Ready Scholarship Portal 🎓
+# ScholarWise - Production Ready Scholarship Portal 🎓
 
-> **🚀 Status**: Production Ready | **📅 Version**: 3.0.0 | **✅ Compliance**: 100% LIVE DATA ONLY
+> **🚀 Status**: Production Ready | **📅 Version**: 3.0.0 | **🔐 Auth**: Google OAuth + Traditional | **🔗 Ports**: Backend 5001, Frontend 5174
 
-A comprehensive, AI-powered scholarship discovery platform for Indian students with **verified working application links**.
+A comprehensive, AI-powered scholarship discovery platform for Indian students with verified working application links and hybrid authentication system.
 
 ## 🎯 Key Features
 
+- ✅ **Hybrid Authentication** - Google OAuth + Traditional email/password
 - ✅ **LIVE DATA ONLY** - Zero mock/sample/test data
 - ✅ **MANDATORY Link Validation** - Every link verified (≥70 quality score)
 - ✅ **AI-Powered Intelligence** - Smart scraping and content analysis
-- ✅ **Production Ready** - Enterprise-grade architecture and monitoring
+- ✅ **Personal Dashboard** - Track applications and saved scholarships
+- ✅ **Mobile Responsive** - Full mobile experience
 
 ## 🚀 Quick Start
 
@@ -20,17 +22,36 @@ cd backend && npm install
 
 # Set up environment
 cp backend/.env.example backend/.env
-# Edit .env with your MongoDB URI
+# Edit .env with your MongoDB URI and Google OAuth credentials
 
 # Start development
-npm run dev          # Frontend (port 5173)
-npm run backend      # Backend (port 5000)
+npm run dev          # Frontend (port 5174)
+cd backend && npm run dev    # Backend (port 5001)
 ```
 
-## 📚 Documentation
+## � Authentication System
 
-For complete documentation, setup guides, API reference, and deployment instructions, see:
-**[COMPREHENSIVE_DOCUMENTATION.md](./COMPREHENSIVE_DOCUMENTATION.md)**
+### **Access the Portal**
+
+- **Frontend**: http://localhost:5174
+- **Sign Up**: Click "Sign up" → Choose Google or traditional registration
+- **Sign In**: Click "Sign in" → Google OAuth or email/password
+- **Dashboard**: Personal portal with scholarship tracking
+
+### **User Journey**
+
+1. Visit http://localhost:5174
+2. Click "Sign up" or "Sign in" in navbar
+3. Choose authentication method:
+   - **Google**: One-click OAuth sign-in
+   - **Traditional**: Email and password
+4. Complete profile for better recommendations
+5. Browse, save, and apply to scholarships
+
+## 📚 Complete Documentation
+
+For detailed setup, API reference, deployment guide, and technical documentation:
+**[DOCUMENTATION.md](./DOCUMENTATION.md)**
 
 ## 🛠️ Production Commands
 
@@ -38,16 +59,27 @@ For complete documentation, setup guides, API reference, and deployment instruct
 npm run scrape       # Run production scrapers
 npm run status       # Check system status
 npm run monitor      # Monitor link health
-npm run deploy       # Production deployment
 ```
 
-## 🔗 Links
+## 🎯 Current Status
 
-- **Documentation**: [COMPREHENSIVE_DOCUMENTATION.md](./COMPREHENSIVE_DOCUMENTATION.md)
-- **Live Demo**: [Coming Soon]
-- **GitHub**: [Repository Link]
+- ✅ **Backend**: Running on port 5001 with MongoDB connection
+- ✅ **Frontend**: Running on port 5174 with authentication UI
+- ✅ **Database**: 16+ verified scholarships with working links
+- ✅ **Authentication**: JWT + Google OAuth fully functional
+- ✅ **API**: All endpoints working with rate limiting
+- ✅ **Mobile**: Responsive design for all devices
+
+## 🔗 Important Links
+
+- **Complete Documentation**: [DOCUMENTATION.md](./DOCUMENTATION.md)
+- **Frontend**: http://localhost:5174
+- **Backend API**: http://localhost:5001/api
+- **Health Check**: http://localhost:5001/api/health
 
 ---
+
+**Ready for production deployment! 🚀**
 
 **Built for Indian Students | 100% Free | Production Ready**
 npm install

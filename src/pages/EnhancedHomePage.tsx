@@ -4,16 +4,26 @@ import {
   Search,
   Clock,
   BookOpen,
-  Users,
   Globe,
   AlertCircle,
   RefreshCw,
   TrendingUp,
   Target,
   Zap,
+  Award,
+  ArrowRight,
+  Star,
+  Heart,
+  Calendar,
+  MapPin,
+  GraduationCap,
+  CheckCircle,
+  Eye,
+  Bookmark,
 } from "lucide-react";
 import type { Scholarship } from "../services/scholarshipService";
 import { scholarshipService } from "../services/scholarshipService";
+import { useAuth } from "../contexts/AuthContext";
 
 const EnhancedHomePage: React.FC = () => {
   const [featuredScholarships, setFeaturedScholarships] = useState<
@@ -28,8 +38,13 @@ const EnhancedHomePage: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState("all");
+
+  const { user } = useAuth();
 
   useEffect(() => {
+    setIsVisible(true);
     fetchHomePageData();
   }, []);
 
@@ -88,47 +103,120 @@ const EnhancedHomePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Find Your Perfect Scholarship
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-              Discover verified scholarships for Indian students. All
-              application links tested and validated for your success.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/scholarships"
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center space-x-2"
-              >
-                <Search className="h-5 w-5" />
-                <span>Browse Live Scholarships</span>
-              </Link>
-              <Link
-                to="/admin"
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-200 flex items-center justify-center space-x-2"
-              >
-                <Globe className="h-5 w-5" />
-                <span>System Status</span>
-              </Link>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Enhanced Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse animation-delay-2000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse animation-delay-4000"></div>
+        </div>
+
+        <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div
+              className={`text-center transform transition-all duration-1000 ${
+                isVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-10 opacity-0"
+              }`}
+            >
+              {/* Welcome Message */}
+              {user && (
+                <div className="mb-6">
+                  <p className="text-blue-200 text-lg">Welcome back,</p>
+                  <h1 className="text-3xl font-bold text-yellow-300">
+                    {user.firstName}!
+                  </h1>
+                </div>
+              )}
+
+              <div className="mb-8">
+                <h1
+                  className={`text-4xl md:text-6xl font-bold mb-6 ${
+                    user ? "text-2xl md:text-4xl" : ""
+                  }`}
+                >
+                  {user
+                    ? "Your Scholarship Dashboard"
+                    : "Find Your Perfect Scholarship"}
+                </h1>
+                <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed">
+                  Discover{" "}
+                  <span className="text-yellow-300 font-semibold">
+                    verified scholarships
+                  </span>{" "}
+                  for Indian students. All application links{" "}
+                  <span className="text-green-300 font-semibold">
+                    tested and validated
+                  </span>{" "}
+                  for your success.
+                </p>
+              </div>
+
+              {/* Quick Stats Banner */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-2xl font-bold text-yellow-300">
+                    {stats.total}+
+                  </div>
+                  <div className="text-sm text-blue-200">Live Scholarships</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-2xl font-bold text-green-300">
+                    {stats.active}
+                  </div>
+                  <div className="text-sm text-blue-200">Active Today</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-2xl font-bold text-purple-300">
+                    ₹50Cr+
+                  </div>
+                  <div className="text-sm text-blue-200">Total Value</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-2xl font-bold text-orange-300">6</div>
+                  <div className="text-sm text-blue-200">Verified Sources</div>
+                </div>
+              </div>
+
+              {/* Enhanced CTAs */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/scholarships"
+                  className="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                >
+                  <Search className="h-5 w-5 group-hover:rotate-12 transition-transform" />
+                  <span>Explore Scholarships</span>
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="group border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                >
+                  <Award className="h-5 w-5 group-hover:rotate-12 transition-transform" />
+                  <span>My Dashboard</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Live Statistics */}
-      <section className="py-12 bg-gray-50">
+      {/* Enhanced Live Statistics */}
+      <section className="py-16 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Live Scholarship Data
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center space-x-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span>Live Data</span>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Real-time Scholarship Statistics
             </h2>
-            <p className="text-gray-600">
-              Real-time statistics from our verified scholarship database
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Updated every hour from our verified scholarship database
             </p>
           </div>
 
@@ -137,327 +225,555 @@ const EnhancedHomePage: React.FC = () => {
               {[...Array(4)].map((_, i) => (
                 <div
                   key={i}
-                  className="bg-white p-6 rounded-xl shadow-sm animate-pulse"
+                  className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl shadow-sm animate-pulse"
                 >
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-8 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-8 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-3/4"></div>
                 </div>
               ))}
             </div>
           ) : error ? (
-            <div className="text-center py-12">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <p className="text-red-600 mb-4">{error}</p>
+            <div className="text-center py-16">
+              <div className="bg-red-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <AlertCircle className="h-10 w-10 text-red-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Unable to Load Data
+              </h3>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">{error}</p>
               <button
                 onClick={fetchHomePageData}
-                className="flex items-center space-x-2 mx-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg"
               >
                 <RefreshCw className="h-4 w-4" />
-                <span>Retry</span>
+                <span>Try Again</span>
               </button>
             </div>
           ) : (
             <div className="grid md:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow-sm border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Scholarships
-                    </p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {stats.total.toLocaleString()}
-                    </p>
+              {[
+                {
+                  label: "Total Scholarships",
+                  value: stats.total.toLocaleString(),
+                  icon: BookOpen,
+                  color: "blue",
+                  gradient: "from-blue-500 to-blue-600",
+                },
+                {
+                  label: "Active Today",
+                  value: stats.active.toLocaleString(),
+                  icon: Zap,
+                  color: "green",
+                  gradient: "from-green-500 to-green-600",
+                },
+                {
+                  label: "Added This Week",
+                  value: stats.recentlyAdded.toLocaleString(),
+                  icon: TrendingUp,
+                  color: "purple",
+                  gradient: "from-purple-500 to-purple-600",
+                },
+                {
+                  label: "Verified Sources",
+                  value: "6",
+                  icon: CheckCircle,
+                  color: "indigo",
+                  gradient: "from-indigo-500 to-indigo-600",
+                },
+              ].map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={index}
+                    className={`bg-gradient-to-br ${stat.gradient} p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-white group`}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <Icon className="h-8 w-8 text-white/80 group-hover:text-white transition-colors" />
+                      <div className="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                        <TrendingUp className="h-4 w-4" />
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold mb-2">{stat.value}</div>
+                    <div className="text-white/80 text-sm font-medium">
+                      {stat.label}
+                    </div>
                   </div>
-                  <div className="p-3 bg-blue-50 rounded-lg">
-                    <BookOpen className="h-6 w-6 text-blue-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow-sm border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Active Today
-                    </p>
-                    <p className="text-3xl font-bold text-green-600">
-                      {stats.active.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-green-50 rounded-lg">
-                    <Zap className="h-6 w-6 text-green-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow-sm border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Added This Week
-                    </p>
-                    <p className="text-3xl font-bold text-purple-600">
-                      {stats.recentlyAdded.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-purple-50 rounded-lg">
-                    <TrendingUp className="h-6 w-6 text-purple-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow-sm border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Verified Sources
-                    </p>
-                    <p className="text-3xl font-bold text-indigo-600">6</p>
-                  </div>
-                  <div className="p-3 bg-indigo-50 rounded-lg">
-                    <Globe className="h-6 w-6 text-indigo-600" />
-                  </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           )}
         </div>
       </section>
 
-      {/* Featured Scholarships */}
-      <section className="py-16 bg-white">
+      {/* Enhanced Featured Scholarships */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Star className="w-4 h-4" />
+              <span>Featured Opportunities</span>
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
               Latest Verified Scholarships
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Fresh opportunities with verified application links
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Fresh opportunities with{" "}
+              <span className="text-green-600 font-semibold">
+                verified application links
+              </span>{" "}
+              and{" "}
+              <span className="text-blue-600 font-semibold">
+                real-time validation
+              </span>
             </p>
           </div>
 
+          {/* Filter Tabs */}
+          <div className="flex justify-center mb-12">
+            <div className="bg-white rounded-xl p-2 shadow-lg border">
+              {["all", "undergraduate", "postgraduate", "phd"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-6 py-3 rounded-lg font-medium capitalize transition-all duration-200 ${
+                    activeTab === tab
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                  }`}
+                >
+                  {tab === "all" ? "All Levels" : tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
-                  className="bg-gray-100 rounded-xl p-6 animate-pulse"
+                  className="bg-white rounded-2xl p-8 animate-pulse shadow-lg"
                 >
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="h-6 bg-gray-200 rounded w-24"></div>
+                    <div className="h-4 bg-gray-200 rounded w-16"></div>
+                  </div>
                   <div className="h-6 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-20 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-8 bg-gray-200 rounded"></div>
+                  <div className="h-20 bg-gray-200 rounded mb-6"></div>
+                  <div className="space-y-3">
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  </div>
+                  <div className="h-12 bg-gray-200 rounded mt-6"></div>
                 </div>
               ))}
             </div>
           ) : featuredScholarships.length === 0 ? (
-            <div className="text-center py-12">
-              <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">
+            <div className="text-center py-20">
+              <div className="bg-blue-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-8">
+                <BookOpen className="h-12 w-12 text-blue-500" />
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                 Scholarships Loading
               </h3>
-              <p className="text-gray-500 mb-6">
-                Our scrapers are working to fetch the latest scholarships for
-                you.
+              <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+                Our AI scrapers are working to fetch the latest verified
+                scholarships for you.
               </p>
-              <Link
-                to="/admin"
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                <Globe className="h-4 w-4" />
-                <span>Check System Status</span>
-              </Link>
+              <div className="flex justify-center space-x-4">
+                <Link
+                  to="/admin"
+                  className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg"
+                >
+                  <Globe className="h-4 w-4" />
+                  <span>Check System Status</span>
+                </Link>
+                <button
+                  onClick={fetchHomePageData}
+                  className="inline-flex items-center space-x-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  <span>Refresh</span>
+                </button>
+              </div>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredScholarships.map((scholarship) => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredScholarships.map((scholarship, index) => (
                 <div
                   key={scholarship._id}
-                  className="bg-white border rounded-xl p-6 hover:shadow-lg transition-shadow"
+                  className={`bg-white rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100 group ${
+                    index < 3 ? "ring-2 ring-blue-500/20" : ""
+                  }`}
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full">
-                      {scholarship.category}
-                    </span>
-                    <div className="flex items-center space-x-1 text-green-600">
-                      <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-                      <span className="text-xs">Verified</span>
+                  {/* Scholarship Header */}
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center space-x-2">
+                      <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm rounded-full font-medium">
+                        {scholarship.category}
+                      </span>
+                      {index < 3 && (
+                        <div className="flex items-center space-x-1 text-yellow-500">
+                          <Star className="h-4 w-4 fill-current" />
+                          <span className="text-xs font-medium">Featured</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-1 text-green-600">
+                        <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-xs font-medium">Verified</span>
+                      </div>
+                      <button className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Heart className="h-5 w-5" />
+                      </button>
                     </div>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                  {/* Scholarship Content */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     {scholarship.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                  <p className="text-gray-600 text-sm mb-6 line-clamp-3 leading-relaxed">
                     {scholarship.description}
                   </p>
 
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Amount:</span>
-                      <span className="font-semibold text-green-600">
+                  {/* Scholarship Details */}
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 text-gray-500">
+                        <Award className="h-4 w-4" />
+                        <span className="text-sm">Amount</span>
+                      </div>
+                      <span className="font-bold text-green-600 text-lg">
                         {formatCurrency(scholarship.amount)}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Deadline:</span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 text-gray-500">
+                        <Clock className="h-4 w-4" />
+                        <span className="text-sm">Deadline</span>
+                      </div>
                       <span className="font-semibold text-red-600">
                         {formatDeadline(scholarship.deadline)}
                       </span>
                     </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 text-gray-500">
+                        <GraduationCap className="h-4 w-4" />
+                        <span className="text-sm">Level</span>
+                      </div>
+                      <span className="text-gray-700 capitalize font-medium">
+                        {scholarship.educationLevel}
+                      </span>
+                    </div>
+                    {scholarship.state && (
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2 text-gray-500">
+                          <MapPin className="h-4 w-4" />
+                          <span className="text-sm">Location</span>
+                        </div>
+                        <span className="text-gray-700 font-medium">
+                          {scholarship.state}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  <Link
-                    to={`/scholarship/${scholarship._id}`}
-                    className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    View Details
-                  </Link>
+                  {/* Action Buttons */}
+                  <div className="flex space-x-3">
+                    <Link
+                      to={`/scholarship/${scholarship._id}`}
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center px-4 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group"
+                    >
+                      <Eye className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                      <span>View Details</span>
+                    </Link>
+                    <button className="px-4 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                      <Bookmark className="h-4 w-4 text-gray-600" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           )}
 
-          <div className="text-center mt-12">
+          {/* View All Button */}
+          <div className="text-center mt-16">
             <Link
               to="/scholarships"
-              className="inline-flex items-center space-x-2 px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-semibold text-lg"
             >
-              <Search className="h-5 w-5" />
-              <span>View All Scholarships</span>
+              <Search className="h-6 w-6" />
+              <span>Explore All Scholarships</span>
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Why Choose Our Platform?
+      {/* Enhanced Features Section */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.15) 1px, transparent 0)",
+              backgroundSize: "20px 20px",
+            }}
+          ></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Why Choose ScholarHub India?
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We ensure every scholarship is real, verified, and accessible
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We ensure every scholarship is{" "}
+              <span className="text-blue-600 font-semibold">real</span>,
+              <span className="text-green-600 font-semibold"> verified</span>,
+              and
+              <span className="text-purple-600 font-semibold"> accessible</span>
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Globe className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Live Data Only
-              </h3>
-              <p className="text-gray-600">
-                All scholarships scraped in real-time from verified sources. No
-                fake or outdated information.
-              </p>
-            </div>
-
-            <div className="text-center p-6">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Verified Links
-              </h3>
-              <p className="text-gray-600">
-                Every application link tested and validated to ensure you can
-                actually apply for the scholarship.
-              </p>
-            </div>
-
-            <div className="text-center p-6">
-              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Real-time Updates
-              </h3>
-              <p className="text-gray-600">
-                Continuous monitoring and updates ensure you never miss a
-                deadline or new opportunity.
-              </p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              {
+                icon: Globe,
+                title: "Live Data Only",
+                description:
+                  "All scholarships scraped in real-time from verified sources. No fake or outdated information.",
+                color: "blue",
+                gradient: "from-blue-500 to-blue-600",
+                features: [
+                  "Real-time scraping",
+                  "No mock data",
+                  "6 verified sources",
+                ],
+              },
+              {
+                icon: Target,
+                title: "Verified Links",
+                description:
+                  "Every application link tested and validated to ensure you can actually apply for the scholarship.",
+                color: "green",
+                gradient: "from-green-500 to-green-600",
+                features: [
+                  "100% tested links",
+                  "Link validation",
+                  "Quality scoring",
+                ],
+              },
+              {
+                icon: Zap,
+                title: "AI-Powered Updates",
+                description:
+                  "Continuous monitoring and AI-enhanced updates ensure you never miss a deadline or opportunity.",
+                color: "purple",
+                gradient: "from-purple-500 to-purple-600",
+                features: [
+                  "AI monitoring",
+                  "Smart alerts",
+                  "Deadline tracking",
+                ],
+              },
+            ].map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div key={index} className="text-center group">
+                  <div
+                    className={`bg-gradient-to-br ${feature.gradient} w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                  >
+                    <Icon className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    {feature.description}
+                  </p>
+                  <div className="space-y-2">
+                    {feature.features.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-center space-x-2 text-sm text-gray-500"
+                      >
+                        <CheckCircle
+                          className={`h-4 w-4 text-${feature.color}-500`}
+                        />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Upcoming Deadlines */}
+      {/* Urgent Deadlines Section */}
       {upcomingDeadlines.length > 0 && (
-        <section className="py-16 bg-red-50">
+        <section className="py-20 bg-gradient-to-br from-red-50 to-orange-50 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-red-900 mb-4">
-                ⚠️ Urgent Deadlines
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center space-x-2 bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <AlertCircle className="w-4 h-4" />
+                <span>Urgent Deadlines</span>
+              </div>
+              <h2 className="text-4xl font-bold text-red-900 mb-6">
+                ⚠️ Don't Miss These Opportunities
               </h2>
-              <p className="text-lg text-red-700 max-w-2xl mx-auto">
-                Don't miss these scholarships with approaching deadlines
+              <p className="text-xl text-red-700 max-w-3xl mx-auto">
+                Scholarships with approaching deadlines - apply now before it's
+                too late!
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {upcomingDeadlines.slice(0, 3).map((scholarship) => (
                 <div
                   key={scholarship._id}
-                  className="bg-white border-2 border-red-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
+                  className="bg-white border-2 border-red-200 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group"
                 >
-                  <div className="flex items-center space-x-2 mb-3">
-                    <Clock className="h-5 w-5 text-red-500" />
-                    <span className="text-red-600 font-semibold">
-                      {formatDeadline(scholarship.deadline)}
-                    </span>
+                  {/* Urgency Indicator */}
+                  <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-2 rounded-bl-2xl text-sm font-bold">
+                    URGENT
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <div className="bg-red-100 p-3 rounded-xl">
+                      <Clock className="h-6 w-6 text-red-500" />
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg">
+                        {formatDeadline(scholarship.deadline)}
+                      </div>
+                      <div className="text-red-500 text-sm">
+                        Application deadline
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-red-600 transition-colors">
                     {scholarship.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-600 text-sm mb-6 line-clamp-3">
                     {scholarship.description}
                   </p>
 
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-lg font-bold text-green-600">
+                      {formatCurrency(scholarship.amount)}
+                    </div>
+                    <div className="flex items-center space-x-1 text-green-600">
+                      <CheckCircle className="h-4 w-4" />
+                      <span className="text-sm">Verified</span>
+                    </div>
+                  </div>
+
                   <Link
                     to={`/scholarship/${scholarship._id}`}
-                    className="block w-full text-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    className="block w-full text-center px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl"
                   >
                     Apply Now
                   </Link>
                 </div>
               ))}
             </div>
+
+            <div className="text-center mt-12">
+              <Link
+                to="/scholarships?filter=deadline"
+                className="inline-flex items-center space-x-2 px-8 py-4 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors shadow-lg font-semibold"
+              >
+                <Calendar className="h-5 w-5" />
+                <span>View All Urgent Deadlines</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </section>
       )}
 
-      {/* Call to Action */}
-      <section className="py-16 bg-blue-600">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Find Your Scholarship?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Join thousands of students who have found their perfect educational
-            funding
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      {/* Enhanced Call to Action */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10">
+            <div className="absolute top-20 left-20 w-64 h-64 bg-white rounded-full mix-blend-multiply filter blur-2xl animate-float"></div>
+            <div className="absolute bottom-20 right-20 w-96 h-96 bg-yellow-300 rounded-full mix-blend-multiply filter blur-2xl animate-float animation-delay-2000"></div>
+          </div>
+        </div>
+
+        <div className="relative max-w-6xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to Find Your Scholarship?
+            </h2>
+            <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed">
+              Join{" "}
+              <span className="text-yellow-300 font-bold">
+                thousands of students
+              </span>{" "}
+              who have found their perfect educational funding through our
+              verified platform
+            </p>
+          </div>
+
+          {/* Success Metrics */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+            {[
+              { number: "10,000+", label: "Students Helped" },
+              { number: "₹50Cr+", label: "Total Scholarships" },
+              { number: "6", label: "Verified Sources" },
+              { number: "99%", label: "Link Accuracy" },
+            ].map((metric, index) => (
+              <div
+                key={index}
+                className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20"
+              >
+                <div className="text-2xl font-bold text-yellow-300 mb-2">
+                  {metric.number}
+                </div>
+                <div className="text-blue-200 text-sm">{metric.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
               to="/scholarships"
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center space-x-2"
+              className="group bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl flex items-center justify-center space-x-3"
             >
-              <Search className="h-5 w-5" />
-              <span>Start Searching</span>
+              <Search className="h-6 w-6 group-hover:rotate-12 transition-transform" />
+              <span>Start Your Search</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              to="/admin"
-              className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-200 flex items-center justify-center space-x-2"
+              to="/dashboard"
+              className="group border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl flex items-center justify-center space-x-3"
             >
-              <Users className="h-5 w-5" />
-              <span>System Monitor</span>
+              <Award className="h-6 w-6 group-hover:rotate-12 transition-transform" />
+              <span>My Dashboard</span>
             </Link>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="mt-12 pt-8 border-t border-white/20">
+            <p className="text-blue-200 text-sm mb-4">
+              Trusted by students from
+            </p>
+            <div className="flex flex-wrap justify-center items-center space-x-8 text-white/80">
+              <span>IIT • NIT • AIIMS • DU • JNU • BHU</span>
+            </div>
           </div>
         </div>
       </section>

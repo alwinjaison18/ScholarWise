@@ -1,10 +1,10 @@
 import { useState } from "react";
-import {
-  Search,
-  Calendar,
-  MapPin,
-  DollarSign,
-  RefreshCw,
+import { 
+  Search, 
+  Calendar, 
+  MapPin, 
+  DollarSign, 
+  RefreshCw, 
   Filter,
   Grid,
   List,
@@ -16,7 +16,7 @@ import {
   ChevronRight,
   TrendingUp,
   Shield,
-  Zap,
+  Zap
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useScholarships } from "../hooks/useScholarships";
@@ -24,8 +24,8 @@ import { useScholarships } from "../hooks/useScholarships";
 const ScholarshipsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-  const [sortBy, setSortBy] = useState("deadline");
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [sortBy, setSortBy] = useState('deadline');
   const [filters, setFilters] = useState({
     category: "",
     educationLevel: "",
@@ -94,56 +94,30 @@ const ScholarshipsPage: React.FC = () => {
           <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
           <div className="absolute bottom-10 right-10 w-48 h-48 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
         </div>
-
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
               Discover Your Perfect Scholarship
             </h1>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-              Explore thousands of verified scholarship opportunities with our
-              AI-powered platform. Find funding that matches your academic goals
-              and background.
+              Explore thousands of verified scholarship opportunities with our AI-powered platform. 
+              Find funding that matches your academic goals and background.
             </p>
           </div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             {[
-              {
-                icon: Award,
-                label: "Active Scholarships",
-                value: "2,500+",
-                color: "text-yellow-300",
-              },
-              {
-                icon: DollarSign,
-                label: "Total Worth",
-                value: "₹50 Cr+",
-                color: "text-green-300",
-              },
-              {
-                icon: Users,
-                label: "Students Helped",
-                value: "10,000+",
-                color: "text-blue-300",
-              },
-              {
-                icon: Shield,
-                label: "Verified Sources",
-                value: "100%",
-                color: "text-purple-300",
-              },
+              { icon: Award, label: "Active Scholarships", value: "2,500+", color: "text-yellow-300" },
+              { icon: DollarSign, label: "Total Worth", value: "₹50 Cr+", color: "text-green-300" },
+              { icon: Users, label: "Students Helped", value: "10,000+", color: "text-blue-300" },
+              { icon: Shield, label: "Verified Sources", value: "100%", color: "text-purple-300" },
             ].map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div
-                  key={index}
-                  className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group"
-                >
-                  <Icon
-                    className={`h-8 w-8 ${stat.color} mb-3 group-hover:scale-110 transition-transform duration-300`}
-                  />
+                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+                  <Icon className={`h-8 w-8 ${stat.color} mb-3 group-hover:scale-110 transition-transform duration-300`} />
                   <div className="text-2xl font-bold mb-1">{stat.value}</div>
                   <div className="text-sm text-blue-100">{stat.label}</div>
                 </div>
@@ -183,15 +157,15 @@ const ScholarshipsPage: React.FC = () => {
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                  showFilters
-                    ? "bg-blue-100 text-blue-700 border border-blue-200"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  showFilters 
+                    ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
                 <Filter className="h-4 w-4" />
                 Filters
               </button>
-
+              
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -206,21 +180,21 @@ const ScholarshipsPage: React.FC = () => {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setViewMode("list")}
+                onClick={() => setViewMode('list')}
                 className={`p-2 rounded-lg transition-all duration-200 ${
-                  viewMode === "list"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-400 hover:text-gray-600"
+                  viewMode === 'list' 
+                    ? 'bg-blue-100 text-blue-600' 
+                    : 'text-gray-400 hover:text-gray-600'
                 }`}
               >
                 <List className="h-5 w-5" />
               </button>
               <button
-                onClick={() => setViewMode("grid")}
+                onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-lg transition-all duration-200 ${
-                  viewMode === "grid"
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-400 hover:text-gray-600"
+                  viewMode === 'grid' 
+                    ? 'bg-blue-100 text-blue-600' 
+                    : 'text-gray-400 hover:text-gray-600'
                 }`}
               >
                 <Grid className="h-5 w-5" />
@@ -232,15 +206,14 @@ const ScholarshipsPage: React.FC = () => {
           {showFilters && (
             <div className="mt-6 pt-6 border-t border-gray-200 animate-in slide-in-from-top duration-300">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Category
                   </label>
                   <select
                     value={filters.category}
-                    onChange={(e) =>
-                      handleFilterChange("category", e.target.value)
-                    }
+                    onChange={(e) => handleFilterChange("category", e.target.value)}
                     className="w-full p-3 bg-white/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   >
                     <option value="">All Categories</option>
@@ -300,9 +273,7 @@ const ScholarshipsPage: React.FC = () => {
                   </label>
                   <select
                     value={filters.state}
-                    onChange={(e) =>
-                      handleFilterChange("state", e.target.value)
-                    }
+                    onChange={(e) => handleFilterChange("state", e.target.value)}
                     className="w-full p-3 bg-white/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   >
                     <option value="">All India</option>
@@ -364,27 +335,20 @@ const ScholarshipsPage: React.FC = () => {
               No Scholarships Found
             </h3>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              No scholarships match your current search criteria. Try adjusting
-              your filters or search terms.
+              No scholarships match your current search criteria. Try adjusting your filters or search terms.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8">
               <div className="bg-blue-50 p-4 rounded-xl">
                 <TrendingUp className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-                <p className="text-sm text-blue-800">
-                  Broaden your search criteria
-                </p>
+                <p className="text-sm text-blue-800">Broaden your search criteria</p>
               </div>
               <div className="bg-purple-50 p-4 rounded-xl">
                 <Zap className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-                <p className="text-sm text-purple-800">
-                  Check back for new scholarships
-                </p>
+                <p className="text-sm text-purple-800">Check back for new scholarships</p>
               </div>
               <div className="bg-green-50 p-4 rounded-xl">
                 <Shield className="h-6 w-6 text-green-600 mx-auto mb-2" />
-                <p className="text-sm text-green-800">
-                  All listings are verified
-                </p>
+                <p className="text-sm text-green-800">All listings are verified</p>
               </div>
             </div>
             <button
@@ -411,18 +375,16 @@ const ScholarshipsPage: React.FC = () => {
             </div>
 
             {/* Enhanced Scholarship Cards */}
-            <div
-              className={`${
-                viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                  : "space-y-6"
-              }`}
-            >
+            <div className={`${
+              viewMode === 'grid' 
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
+                : 'space-y-6'
+            }`}>
               {scholarships.map((scholarship, index) => (
                 <div
                   key={scholarship._id}
                   className={`group bg-white/70 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:scale-[1.02] ${
-                    viewMode === "grid" ? "p-6" : "p-8"
+                    viewMode === 'grid' ? 'p-6' : 'p-8'
                   }`}
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
@@ -435,49 +397,41 @@ const ScholarshipsPage: React.FC = () => {
                           by {scholarship.provider}
                         </span>
                       </div>
-                      <h3
-                        className={`font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-200 ${
-                          viewMode === "grid" ? "text-lg" : "text-xl"
-                        }`}
-                      >
+                      <h3 className={`font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-200 ${
+                        viewMode === 'grid' ? 'text-lg' : 'text-xl'
+                      }`}>
                         <Link
                           to={`/scholarship/${scholarship._id}`}
                           className="hover:underline"
                         >
-                          {viewMode === "grid" && scholarship.title.length > 60
-                            ? scholarship.title.substring(0, 60) + "..."
-                            : scholarship.title}
+                          {scholarship.title}
                         </Link>
                       </h3>
                     </div>
 
                     {/* Urgency Badge */}
-                    <div
-                      className={`ml-4 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                        getTimeLeft(scholarship.deadline).includes("Expired")
-                          ? "bg-red-100 text-red-800"
-                          : getTimeLeft(scholarship.deadline).includes("day") &&
-                            !getTimeLeft(scholarship.deadline).includes("days")
-                          ? "bg-yellow-100 text-yellow-800"
-                          : parseInt(getTimeLeft(scholarship.deadline)) <= 7
-                          ? "bg-orange-100 text-orange-800"
-                          : "bg-green-100 text-green-800"
-                      }`}
-                    >
+                    <div className={`ml-4 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      getTimeLeft(scholarship.deadline).includes("Expired")
+                        ? "bg-red-100 text-red-800"
+                        : getTimeLeft(scholarship.deadline).includes("day") && !getTimeLeft(scholarship.deadline).includes("days")
+                        ? "bg-yellow-100 text-yellow-800"
+                        : parseInt(getTimeLeft(scholarship.deadline)) <= 7
+                        ? "bg-orange-100 text-orange-800"
+                        : "bg-green-100 text-green-800"
+                    }`}>
                       <Clock className="h-3 w-3 inline mr-1" />
                       {getTimeLeft(scholarship.deadline)}
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p
-                    className={`text-gray-600 mb-4 leading-relaxed ${
-                      viewMode === "grid" ? "text-sm" : ""
-                    }`}
-                  >
-                    {viewMode === "grid" && scholarship.description.length > 120
-                      ? scholarship.description.substring(0, 120) + "..."
-                      : scholarship.description}
+                  <p className={`text-gray-600 mb-4 leading-relaxed ${
+                    viewMode === 'grid' ? 'text-sm' : ''
+                  }`}>
+                    {viewMode === 'grid' && scholarship.description.length > 120 
+                      ? scholarship.description.substring(0, 120) + '...'
+                      : scholarship.description
+                    }
                   </p>
 
                   {/* Key Details */}
@@ -485,34 +439,22 @@ const ScholarshipsPage: React.FC = () => {
                     <div className="flex items-center gap-2 p-3 bg-green-50 rounded-xl">
                       <DollarSign className="h-5 w-5 text-green-600" />
                       <div>
-                        <div className="text-sm text-green-600 font-medium">
-                          Amount
-                        </div>
-                        <div className="text-green-800 font-semibold">
-                          {scholarship.amount}
-                        </div>
+                        <div className="text-sm text-green-600 font-medium">Amount</div>
+                        <div className="text-green-800 font-semibold">{scholarship.amount}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-xl">
                       <Calendar className="h-5 w-5 text-blue-600" />
                       <div>
-                        <div className="text-sm text-blue-600 font-medium">
-                          Deadline
-                        </div>
-                        <div className="text-blue-800 font-semibold">
-                          {formatDate(scholarship.deadline)}
-                        </div>
+                        <div className="text-sm text-blue-600 font-medium">Deadline</div>
+                        <div className="text-blue-800 font-semibold">{formatDate(scholarship.deadline)}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-xl">
                       <MapPin className="h-5 w-5 text-purple-600" />
                       <div>
-                        <div className="text-sm text-purple-600 font-medium">
-                          Location
-                        </div>
-                        <div className="text-purple-800 font-semibold">
-                          {scholarship.state}
-                        </div>
+                        <div className="text-sm text-purple-600 font-medium">Location</div>
+                        <div className="text-purple-800 font-semibold">{scholarship.state}</div>
                       </div>
                     </div>
                   </div>
@@ -578,7 +520,7 @@ const ScholarshipsPage: React.FC = () => {
                     } else {
                       page = currentPage - 3 + i;
                     }
-
+                    
                     return (
                       <button
                         key={page}

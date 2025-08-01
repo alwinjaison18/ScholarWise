@@ -124,7 +124,7 @@ const AdminDashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [realTimeUpdates, setRealTimeUpdates] = useState(true);
 
-  const API_BASE = "http://localhost:5000/api";
+  const API_BASE = "http://localhost:5001/api";
 
   const fetchHealth = async () => {
     try {

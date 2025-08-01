@@ -21,7 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import { useScholarships } from "../hooks/useScholarships";
 
-const ScholarshipsPage: React.FC = () => {
+const EnhancedScholarshipsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
@@ -603,4 +603,4 @@ const ScholarshipsPage: React.FC = () => {
   );
 };
 
-export default ScholarshipsPage;
+export default EnhancedScholarshipsPage;

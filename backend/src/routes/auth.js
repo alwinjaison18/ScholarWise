@@ -1,16 +1,16 @@
-import express from 'express';
-import User from '../models/User.js';
-import { 
-  generateToken, 
-  generateRefreshToken, 
+import express from "express";
+import User from "../models/User.js";
+import {
+  generateToken,
+  generateRefreshToken,
   generateEmailVerificationToken,
   generatePasswordResetToken,
   verifyEmailToken,
   verifyPasswordResetToken,
-  authenticateToken 
-} from '../utils/auth.js';
-import passport from '../config/passport.js';
-import rateLimit from 'express-rate-limit';
+  authenticateToken,
+} from "../utils/auth.js";
+import passport from "../config/passport.js";
+import rateLimit from "express-rate-limit";
 
 const router = express.Router();
 
@@ -18,29 +18,31 @@ const router = express.Router();
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // 5 attempts per 15 minutes
-  message: { error: 'Too many authentication attempts, please try again later.' }
+  message: {
+    error: "Too many authentication attempts, please try again later.",
+  },
 });
 
 // User registration
-router.post('/register', authLimiter, async (req, res) => {
+router.post("/register", authLimiter, async (req, res) => {
   try {
-    const { 
-      email, 
-      password, 
-      firstName, 
-      lastName, 
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
       phone,
       educationLevel,
       fieldOfStudy,
       state,
-      city 
+      city,
     } = req.body;
 
     // Validate required fields
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({
         success: false,
-        message: 'Email, password, first name, and last name are required'
+        message: "Email, password, first name, and last name are required",
       });
     }
 
@@ -49,7 +51,7 @@ router.post('/register', authLimiter, async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User with this email already exists'
+        message: "User with this email already exists",
       });
     }
 
@@ -64,7 +66,7 @@ router.post('/register', authLimiter, async (req, res) => {
       fieldOfStudy,
       state,
       city,
-      emailVerificationToken: generateEmailVerificationToken()
+      emailVerificationToken: generateEmailVerificationToken(),
     });
 
     await user.save();
@@ -79,32 +81,32 @@ router.post('/register', authLimiter, async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: "User registered successfully",
       data: {
         user: userResponse,
         token,
-        refreshToken
-      }
+        refreshToken,
+      },
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     res.status(500).json({
       success: false,
-      message: 'Registration failed',
-      error: error.message
+      message: "Registration failed",
+      error: error.message,
     });
   }
 });
 
 // User login
-router.post('/login', authLimiter, async (req, res) => {
+router.post("/login", authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Email and password are required'
+        message: "Email and password are required",
       });
     }
 
@@ -113,7 +115,7 @@ router.post('/login', authLimiter, async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: "Invalid email or password",
       });
     }
 
@@ -121,7 +123,7 @@ router.post('/login', authLimiter, async (req, res) => {
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
-        message: 'Account is deactivated'
+        message: "Account is deactivated",
       });
     }
 
@@ -130,7 +132,7 @@ router.post('/login', authLimiter, async (req, res) => {
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: "Invalid email or password",
       });
     }
 
@@ -148,31 +150,33 @@ router.post('/login', authLimiter, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Login successful',
+      message: "Login successful",
       data: {
         user: userResponse,
         token,
-        refreshToken
-      }
+        refreshToken,
+      },
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     res.status(500).json({
       success: false,
-      message: 'Login failed',
-      error: error.message
+      message: "Login failed",
+      error: error.message,
     });
   }
 });
 
 // Google OAuth routes (only if configured)
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  router.get('/google', 
-    passport.authenticate('google', { scope: ['profile', 'email'] })
+  router.get(
+    "/google",
+    passport.authenticate("google", { scope: ["profile", "email"] })
   );
 
-  router.get('/google/callback',
-    passport.authenticate('google', { session: false }),
+  router.get(
+    "/google/callback",
+    passport.authenticate("google", { session: false }),
     async (req, res) => {
       try {
         const user = req.user;
@@ -180,70 +184,78 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         const refreshToken = generateRefreshToken(user._id);
 
         // Redirect to frontend with tokens
-        const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
-        res.redirect(`${frontendURL}/auth/callback?token=${token}&refresh=${refreshToken}`);
+        const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000";
+        res.redirect(
+          `${frontendURL}/auth/callback?token=${token}&refresh=${refreshToken}`
+        );
       } catch (error) {
-        console.error('Google callback error:', error);
-        const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+        console.error("Google callback error:", error);
+        const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000";
         res.redirect(`${frontendURL}/auth/error?message=Authentication failed`);
       }
     }
   );
 } else {
-  router.get('/google', (req, res) => {
+  router.get("/google", (req, res) => {
     res.status(503).json({
       success: false,
-      message: 'Google OAuth is not configured on this server'
+      message: "Google OAuth is not configured on this server",
     });
   });
 
-  router.get('/google/callback', (req, res) => {
+  router.get("/google/callback", (req, res) => {
     res.status(503).json({
       success: false,
-      message: 'Google OAuth is not configured on this server'
+      message: "Google OAuth is not configured on this server",
     });
   });
 }
 
 // Google OAuth credential verification route (for @react-oauth/google)
-router.post('/google/callback', async (req, res) => {
+router.post("/google/callback", async (req, res) => {
   try {
     const { credential } = req.body;
-    
+
     if (!credential) {
       return res.status(400).json({
         success: false,
-        message: 'Google credential is required'
+        message: "Google credential is required",
       });
     }
 
     // Decode the JWT token from Google
-    const { OAuth2Client } = await import('google-auth-library');
+    const { OAuth2Client } = await import("google-auth-library");
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    
+
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    
+
     const payload = ticket.getPayload();
-    
+
     if (!payload) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid Google credential'
+        message: "Invalid Google credential",
       });
     }
 
-    const { sub: googleId, email, given_name: firstName, family_name: lastName, picture } = payload;
+    const {
+      sub: googleId,
+      email,
+      given_name: firstName,
+      family_name: lastName,
+      picture,
+    } = payload;
 
     // Check if user exists with this Google ID
     let user = await User.findOne({ googleId });
-    
+
     if (!user) {
       // Check if user exists with this email
       user = await User.findOne({ email: email.toLowerCase() });
-      
+
       if (user) {
         // Link Google account to existing user
         user.googleId = googleId;
@@ -254,12 +266,12 @@ router.post('/google/callback', async (req, res) => {
         // Create new user
         user = new User({
           email: email.toLowerCase(),
-          firstName: firstName || '',
-          lastName: lastName || '',
+          firstName: firstName || "",
+          lastName: lastName || "",
           googleId,
           profilePicture: picture,
           isEmailVerified: true,
-          authProvider: 'google'
+          authProvider: "google",
         });
         await user.save();
       }
@@ -270,26 +282,25 @@ router.post('/google/callback', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Google login successful',
+      message: "Google login successful",
       data: {
         user,
         token,
-        refreshToken
-      }
+        refreshToken,
+      },
     });
-
   } catch (error) {
-    console.error('Google OAuth verification error:', error);
+    console.error("Google OAuth verification error:", error);
     res.status(500).json({
       success: false,
-      message: 'Google authentication failed',
-      error: error.message
+      message: "Google authentication failed",
+      error: error.message,
     });
   }
 });
 
 // Get current user profile
-router.get('/me', authenticateToken, async (req, res) => {
+router.get("/me", authenticateToken, async (req, res) => {
   try {
     const user = req.user;
     const profileCompletion = user.getProfileCompletion();
@@ -299,21 +310,21 @@ router.get('/me', authenticateToken, async (req, res) => {
       data: {
         user,
         profileCompletion,
-        recommendationCriteria: user.getRecommendationCriteria()
-      }
+        recommendationCriteria: user.getRecommendationCriteria(),
+      },
     });
   } catch (error) {
-    console.error('Get profile error:', error);
+    console.error("Get profile error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get user profile',
-      error: error.message
+      message: "Failed to get user profile",
+      error: error.message,
     });
   }
 });
 
 // Update user profile
-router.put('/profile', authenticateToken, async (req, res) => {
+router.put("/profile", authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
     const updateData = req.body;
@@ -329,32 +340,32 @@ router.put('/profile', authenticateToken, async (req, res) => {
       userId,
       { ...updateData, updatedAt: new Date() },
       { new: true, runValidators: true }
-    ).select('-password');
+    ).select("-password");
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: "User not found",
       });
     }
 
     res.json({
       success: true,
-      message: 'Profile updated successfully',
-      data: { user }
+      message: "Profile updated successfully",
+      data: { user },
     });
   } catch (error) {
-    console.error('Profile update error:', error);
+    console.error("Profile update error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update profile',
-      error: error.message
+      message: "Failed to update profile",
+      error: error.message,
     });
   }
 });
 
 // Change password
-router.put('/change-password', authenticateToken, async (req, res) => {
+router.put("/change-password", authenticateToken, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user._id;
@@ -362,7 +373,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
         success: false,
-        message: 'Current password and new password are required'
+        message: "Current password and new password are required",
       });
     }
 
@@ -370,7 +381,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: "User not found",
       });
     }
 
@@ -380,7 +391,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
       if (!isValidPassword) {
         return res.status(401).json({
           success: false,
-          message: 'Current password is incorrect'
+          message: "Current password is incorrect",
         });
       }
     }
@@ -391,35 +402,35 @@ router.put('/change-password', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Password changed successfully'
+      message: "Password changed successfully",
     });
   } catch (error) {
-    console.error('Change password error:', error);
+    console.error("Change password error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to change password',
-      error: error.message
+      message: "Failed to change password",
+      error: error.message,
     });
   }
 });
 
 // Logout (client-side token removal is sufficient for JWT)
-router.post('/logout', authenticateToken, (req, res) => {
+router.post("/logout", authenticateToken, (req, res) => {
   res.json({
     success: true,
-    message: 'Logged out successfully'
+    message: "Logged out successfully",
   });
 });
 
 // Verify email (placeholder for email verification implementation)
-router.post('/verify-email', async (req, res) => {
+router.post("/verify-email", async (req, res) => {
   try {
     const { token } = req.body;
-    
+
     if (!token) {
       return res.status(400).json({
         success: false,
-        message: 'Verification token is required'
+        message: "Verification token is required",
       });
     }
 
@@ -429,25 +440,25 @@ router.post('/verify-email', async (req, res) => {
     // In a real implementation, you'd find the user by email and mark as verified
     res.json({
       success: true,
-      message: 'Email verified successfully'
+      message: "Email verified successfully",
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: 'Invalid or expired verification token'
+      message: "Invalid or expired verification token",
     });
   }
 });
 
 // Request password reset
-router.post('/forgot-password', authLimiter, async (req, res) => {
+router.post("/forgot-password", authLimiter, async (req, res) => {
   try {
     const { email } = req.body;
 
     if (!email) {
       return res.status(400).json({
         success: false,
-        message: 'Email is required'
+        message: "Email is required",
       });
     }
 
@@ -456,7 +467,7 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
       // Don't reveal if email exists
       return res.json({
         success: true,
-        message: 'If the email exists, a reset link will be sent'
+        message: "If the email exists, a reset link will be sent",
       });
     }
 
@@ -468,41 +479,41 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
     // In a real implementation, send email here
     res.json({
       success: true,
-      message: 'If the email exists, a reset link will be sent',
-      resetToken // Remove this in production
+      message: "If the email exists, a reset link will be sent",
+      resetToken, // Remove this in production
     });
   } catch (error) {
-    console.error('Forgot password error:', error);
+    console.error("Forgot password error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to process password reset request'
+      message: "Failed to process password reset request",
     });
   }
 });
 
 // Reset password
-router.post('/reset-password', async (req, res) => {
+router.post("/reset-password", async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 
     if (!token || !newPassword) {
       return res.status(400).json({
         success: false,
-        message: 'Token and new password are required'
+        message: "Token and new password are required",
       });
     }
 
     const decoded = verifyPasswordResetToken(token);
-    const user = await User.findOne({ 
+    const user = await User.findOne({
       email: decoded.email,
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: new Date() }
+      resetPasswordExpires: { $gt: new Date() },
     });
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid or expired reset token'
+        message: "Invalid or expired reset token",
       });
     }
 
@@ -513,13 +524,13 @@ router.post('/reset-password', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Password reset successfully'
+      message: "Password reset successfully",
     });
   } catch (error) {
-    console.error('Reset password error:', error);
+    console.error("Reset password error:", error);
     res.status(400).json({
       success: false,
-      message: 'Invalid or expired reset token'
+      message: "Invalid or expired reset token",
     });
   }
 });

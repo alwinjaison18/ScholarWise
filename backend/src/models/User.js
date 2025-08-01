@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
   // Basic user information
@@ -8,147 +8,162 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true
+    trim: true,
   },
   password: {
     type: String,
-    required: function() {
+    required: function () {
       return !this.googleId; // Password required only if not Google auth
     },
-    minlength: 6
+    minlength: 6,
   },
-  
+
   // Profile information
   firstName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   lastName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   profilePicture: {
     type: String,
-    default: null
+    default: null,
   },
-  
+
   // Google OAuth fields
   googleId: {
     type: String,
     unique: true,
-    sparse: true
+    sparse: true,
   },
-  
+
   // User preferences and profile
   phone: {
     type: String,
-    trim: true
+    trim: true,
   },
   dateOfBirth: {
-    type: Date
+    type: Date,
   },
   gender: {
     type: String,
-    enum: ['male', 'female', 'other', 'prefer-not-to-say']
+    enum: ["male", "female", "other", "prefer-not-to-say"],
   },
-  
+
   // Education details
   educationLevel: {
     type: String,
-    enum: ['high-school', 'undergraduate', 'postgraduate', 'phd', 'other']
+    enum: ["high-school", "undergraduate", "postgraduate", "phd", "other"],
   },
   fieldOfStudy: {
-    type: String
+    type: String,
   },
   institution: {
-    type: String
+    type: String,
   },
   graduationYear: {
-    type: Number
+    type: Number,
   },
-  
+
   // Location
   state: {
-    type: String
+    type: String,
   },
   city: {
-    type: String
+    type: String,
   },
   country: {
     type: String,
-    default: 'India'
+    default: "India",
   },
-  
+
   // Scholarship preferences
-  interestedCategories: [{
-    type: String,
-    enum: ['merit-based', 'need-based', 'sports', 'arts', 'science', 'engineering', 'medical', 'other']
-  }],
-  
-  // User activity
-  savedScholarships: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Scholarship'
-  }],
-  appliedScholarships: [{
-    scholarshipId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Scholarship'
-    },
-    appliedAt: {
-      type: Date,
-      default: Date.now
-    },
-    status: {
+  interestedCategories: [
+    {
       type: String,
-      enum: ['applied', 'under-review', 'accepted', 'rejected'],
-      default: 'applied'
+      enum: [
+        "merit-based",
+        "need-based",
+        "sports",
+        "arts",
+        "science",
+        "engineering",
+        "medical",
+        "other",
+      ],
     },
-    notes: String
-  }],
-  
+  ],
+
+  // User activity
+  savedScholarships: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Scholarship",
+    },
+  ],
+  appliedScholarships: [
+    {
+      scholarshipId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Scholarship",
+      },
+      appliedAt: {
+        type: Date,
+        default: Date.now,
+      },
+      status: {
+        type: String,
+        enum: ["applied", "under-review", "accepted", "rejected"],
+        default: "applied",
+      },
+      notes: String,
+    },
+  ],
+
   // Notifications and preferences
   emailNotifications: {
     type: Boolean,
-    default: true
+    default: true,
   },
   pushNotifications: {
     type: Boolean,
-    default: true
+    default: true,
   },
   weeklyDigest: {
     type: Boolean,
-    default: true
+    default: true,
   },
-  
+
   // Account status
   isActive: {
     type: Boolean,
-    default: true
+    default: true,
   },
   isEmailVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   emailVerificationToken: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
-  
+
   // Timestamps
   lastLogin: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // Index for efficient queries
@@ -157,9 +172,9 @@ userSchema.index({ googleId: 1 });
 userSchema.index({ educationLevel: 1, interestedCategories: 1 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
   try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
@@ -170,41 +185,51 @@ userSchema.pre('save', async function(next) {
 });
 
 // Update timestamp on save
-userSchema.pre('save', function(next) {
+userSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();
 });
 
 // Compare password method
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   if (!this.password) return false;
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
 // Get full name
-userSchema.virtual('fullName').get(function() {
+userSchema.virtual("fullName").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
 // Get profile completion percentage
-userSchema.methods.getProfileCompletion = function() {
+userSchema.methods.getProfileCompletion = function () {
   const fields = [
-    'firstName', 'lastName', 'email', 'phone', 'dateOfBirth', 
-    'educationLevel', 'fieldOfStudy', 'institution', 'state', 'city'
+    "firstName",
+    "lastName",
+    "email",
+    "phone",
+    "dateOfBirth",
+    "educationLevel",
+    "fieldOfStudy",
+    "institution",
+    "state",
+    "city",
   ];
-  
-  const completedFields = fields.filter(field => this[field] && this[field] !== '');
+
+  const completedFields = fields.filter(
+    (field) => this[field] && this[field] !== ""
+  );
   return Math.round((completedFields.length / fields.length) * 100);
 };
 
 // Get user's scholarship recommendations
-userSchema.methods.getRecommendationCriteria = function() {
+userSchema.methods.getRecommendationCriteria = function () {
   return {
     educationLevel: this.educationLevel,
     categories: this.interestedCategories,
     state: this.state,
-    fieldOfStudy: this.fieldOfStudy
+    fieldOfStudy: this.fieldOfStudy,
   };
 };
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);
