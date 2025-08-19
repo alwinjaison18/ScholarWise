@@ -140,9 +140,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
         const botMessage: Message = {
           id: `bot_${Date.now()}`,
           type: "bot",
-          content: data.response,
+          content: data.data.response,
           timestamp: new Date(),
-          scholarships: data.scholarships,
+          scholarships: data.data.relevantScholarships,
         };
 
         setMessages((prev) => [...prev, botMessage]);
@@ -214,10 +214,12 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
 
   return (
     <div
-      className={`chatbot-container transition-all duration-300 ${className}`}
+      className={`chatbot-container transition-all duration-300 ${className} ${
+        isMinimized ? "" : "chatbot-mobile"
+      }`}
     >
       <div
-        className={`bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 ${
+        className={`bg-white rounded-2xl shadow-2xl border border-gray-200 transition-all duration-300 overflow-hidden ${
           isMinimized ? "w-80 h-16" : "w-[400px] h-[520px]"
         }`}
         style={{
@@ -225,6 +227,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
           maxWidth: isMinimized ? undefined : "400px",
           minHeight: isMinimized ? undefined : "400px",
           maxHeight: isMinimized ? undefined : "600px",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
         }}
       >
         {/* Header */}
@@ -267,9 +271,10 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
           <>
             {/* Messages Container */}
             <div
-              className="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50"
+              className="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-3 bg-gray-50 chatbot-scroll"
               style={{
                 height: "380px",
+                maxHeight: "380px",
               }}
             >
               {messages.map((message) => (
@@ -277,13 +282,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
                   key={message.id}
                   className={`flex ${
                     message.type === "user" ? "justify-end" : "justify-start"
-                  }`}
+                  } w-full`}
                 >
                   <div
-                    className={`max-w-xs px-3 py-2 rounded-xl ${
+                    className={`chatbot-message-bubble px-3 py-2 rounded-xl break-words ${
                       message.type === "user"
-                        ? "bg-blue-600 text-white"
-                        : "bg-white text-gray-800 shadow-sm border border-gray-200"
+                        ? "bg-blue-600 text-white max-w-[85%]"
+                        : "bg-white text-gray-800 shadow-sm border border-gray-200 max-w-[90%]"
                     }`}
                   >
                     <div className="flex items-start space-x-2">
@@ -293,8 +298,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
                       {message.type === "user" && (
                         <User className="w-3.5 h-3.5 mt-0.5 text-blue-100 flex-shrink-0" />
                       )}
-                      <div className="flex-1">
-                        <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                      <div className="flex-1 min-w-0 chatbot-text-container">
+                        <div className="chatbot-message-content text-sm leading-relaxed">
                           {message.content}
                         </div>
 
@@ -308,22 +313,22 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
                               {message.scholarships.map((scholarship) => (
                                 <div
                                   key={scholarship.id}
-                                  className="bg-blue-50 border border-blue-200 rounded-lg p-2"
+                                  className="bg-blue-50 border border-blue-200 rounded-lg p-2 chatbot-text-container"
                                 >
-                                  <h4 className="font-medium text-blue-900 text-sm mb-1">
+                                  <h4 className="font-medium text-blue-900 text-sm mb-1 chatbot-message-content">
                                     {scholarship.title}
                                   </h4>
-                                  <p className="text-blue-700 text-xs mb-1">
+                                  <p className="text-blue-700 text-xs mb-1 chatbot-message-content">
                                     📋 {scholarship.eligibility}
                                   </p>
-                                  <p className="text-blue-600 text-xs mb-2">
+                                  <p className="text-blue-600 text-xs mb-2 chatbot-message-content">
                                     📅 Deadline: {scholarship.deadline}
                                   </p>
                                   <a
                                     href={scholarship.applicationLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-block bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-blue-700 transition-colors"
+                                    className="inline-block bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-blue-700 transition-colors chatbot-force-break"
                                   >
                                     Apply Now →
                                   </a>
@@ -348,10 +353,10 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = "" }) => {
               ))}
 
               {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white text-gray-800 shadow-sm border border-gray-200 px-4 py-3 rounded-2xl">
+                <div className="flex justify-start w-full">
+                  <div className="bg-white text-gray-800 shadow-sm border border-gray-200 px-4 py-3 rounded-2xl max-w-[90%]">
                     <div className="flex items-center space-x-2">
-                      <Bot className="w-4 h-4 text-blue-600" />
+                      <Bot className="w-4 h-4 text-blue-600 flex-shrink-0" />
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
                         <div

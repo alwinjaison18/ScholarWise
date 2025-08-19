@@ -122,7 +122,7 @@ class ScholarWiseAIChatbot {
       );
 
       // Generate response using Gemini
-      const result = await model.generateContent(contextPrompt);
+      const result = await this.model.generateContent(contextPrompt);
       const response = result.response;
       const aiResponse = response.text();
 

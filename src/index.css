@@ -475,5 +475,85 @@ html {
     width: 95vw !important;
     height: 80vh !important;
     max-height: 500px !important;
+    max-width: 95vw !important;
   }
+
+  .chatbot-message-bubble {
+    max-width: calc(100% - 1rem) !important;
+  }
+}
+
+/* Chatbot Text Wrapping and Container Styles */
+.chatbot-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+.chatbot-message-content {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+
+.chatbot-message-bubble {
+  max-width: calc(100% - 2rem);
+  min-width: 0;
+  flex: 1;
+}
+
+/* Custom scrollbar for chatbot messages */
+.chatbot-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chatbot-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatbot-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.chatbot-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Ensure text doesn't overflow in any direction */
+.chatbot-text-container {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Force long URLs and text to break */
+.chatbot-force-break {
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+/* Ensure links and long text in AI responses break properly */
+.chatbot-message-content a,
+.chatbot-message-content code,
+.chatbot-message-content pre {
+  word-break: break-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  display: inline-block;
+}
+
+/* Handle very long continuous text */
+.chatbot-message-content {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1;
 }
