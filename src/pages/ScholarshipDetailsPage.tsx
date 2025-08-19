@@ -24,6 +24,7 @@ import {
   Mail,
   Building,
 } from "lucide-react";
+import { formatDateLong, getTimeLeftFromDeadline } from "../utils/dateUtils";
 
 interface Scholarship {
   _id: string;
@@ -71,23 +72,11 @@ const ScholarshipDetailsPage: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-IN", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return formatDateLong(dateString);
   };
 
   const getTimeLeft = (deadline: string) => {
-    const now = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) return "Expired";
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "1 day left";
-    return `${diffDays} days left`;
+    return getTimeLeftFromDeadline(deadline);
   };
 
   const checkIfSaved = (scholarshipId: string) => {

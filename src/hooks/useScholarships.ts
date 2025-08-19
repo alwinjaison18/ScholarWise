@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
-import type { Scholarship, ScholarshipFilters } from "../types";
-import scholarshipService from "../services/scholarshipService";
+import type {
+  Scholarship,
+  ScholarshipFilters,
+} from "../services/scholarshipService";
+import { scholarshipService } from "../services/scholarshipService";
 
 export function useScholarships() {
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);

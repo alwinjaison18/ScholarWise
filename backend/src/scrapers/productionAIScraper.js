@@ -23,11 +23,7 @@ import * as cheerio from "cheerio";
 import mongoose from "mongoose";
 import cron from "node-cron";
 import { scrapingLogger } from "../utils/logger.js";
-import {
-  validateScholarshipLinks,
-  processScrapedScholarship,
-  monitorScholarshipLinks,
-} from "../utils/linkValidationSystem.js";
+import linkValidationSystem from "../utils/linkValidationSystem.js";
 import {
   getEmptyStateResponse,
   ensureLiveDataAvailability,
@@ -826,7 +822,15 @@ class ProductionAIScholarshipScraper {
         results.processed++;
 
         // Process with comprehensive validation
-        const savedScholarship = await processScrapedScholarship(scholarship);
+        const validationResult =
+          await linkValidationSystem.validateScholarshipLink(scholarship);
+
+        let savedScholarship = null;
+        if (validationResult.validation.isValid) {
+          // Save scholarship if validation passes
+          savedScholarship = new Scholarship(scholarship);
+          await savedScholarship.save();
+        }
 
         if (savedScholarship) {
           results.saved++;
@@ -866,10 +870,20 @@ class ProductionAIScholarshipScraper {
     cron.schedule("0 2 * * *", async () => {
       try {
         scrapingLogger.info("🔍 Starting scheduled link monitoring...");
-        const monitoringResults = await monitorScholarshipLinks();
+        const scholarships = await Scholarship.find({
+          link: { $exists: true },
+        }).limit(100);
+        const monitoringResults = await linkValidationSystem.batchValidateLinks(
+          scholarships,
+          3
+        );
+
+        const healthyCount = monitoringResults.filter(
+          (r) => r.validation.isValid
+        ).length;
 
         scrapingLogger.info(
-          `✅ Link monitoring completed - ${monitoringResults.healthy}/${monitoringResults.totalChecked} links healthy`
+          `✅ Link monitoring completed - ${healthyCount}/${monitoringResults.length} links healthy`
         );
 
         // Log summary for monitoring

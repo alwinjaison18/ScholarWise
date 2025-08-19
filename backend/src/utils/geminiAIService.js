@@ -45,6 +45,44 @@ class GeminiAIService {
     return this.enabled;
   }
 
+  /**
+   * Clean and parse JSON response from Gemini AI
+   * Removes markdown code blocks and other formatting
+   */
+  cleanAndParseJSON(responseText) {
+    try {
+      // Remove markdown code blocks
+      let cleanText = responseText
+        .replace(/```json\s*/g, "")
+        .replace(/```\s*/g, "");
+
+      // Remove leading/trailing whitespace
+      cleanText = cleanText.trim();
+
+      // Remove JavaScript-style comments
+      cleanText = cleanText.replace(/\/\/.*$/gm, ""); // Remove // comments
+      cleanText = cleanText.replace(/\/\*[\s\S]*?\*\//g, ""); // Remove /* */ comments
+
+      // Find the JSON object bounds
+      const firstBrace = cleanText.indexOf("{");
+      const lastBrace = cleanText.lastIndexOf("}");
+
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        cleanText = cleanText.substring(firstBrace, lastBrace + 1);
+      }
+
+      // Remove any trailing commas before closing braces
+      cleanText = cleanText.replace(/,(\s*[}\]])/g, "$1");
+
+      return JSON.parse(cleanText);
+    } catch (error) {
+      logger.error("JSON parsing error:", error.message);
+      logger.error("Raw response:", responseText);
+      logger.error("Cleaned text:", cleanText);
+      throw new Error(`Failed to parse AI response: ${error.message}`);
+    }
+  }
+
   async enhanceScholarshipContent(scholarship) {
     if (!this.enabled) {
       logger.warn("Gemini AI not enabled, returning original content");
@@ -88,7 +126,7 @@ Focus on:
       const text = response.text();
 
       // Parse JSON response
-      const enhancedData = JSON.parse(text);
+      const enhancedData = this.cleanAndParseJSON(text);
 
       // Validate and merge with original scholarship
       const enhanced = {
@@ -176,7 +214,7 @@ Consider:
 
       const result = await this.generativeModel.generateContent(prompt);
       const response2 = await result.response;
-      const analysis = JSON.parse(response2.text());
+      const analysis = this.cleanAndParseJSON(response2.text());
 
       const finalScore = analysis.isLegitimate
         ? Math.max(70, analysis.confidenceScore)
@@ -244,7 +282,7 @@ Consider:
 
       const result = await this.generativeModel.generateContent(prompt);
       const response = await result.response;
-      const analysis = JSON.parse(response.text());
+      const analysis = this.cleanAndParseJSON(response.text());
 
       logger.info(
         `Duplicate detection found ${
@@ -290,7 +328,7 @@ Focus on:
 
       const result = await this.generativeModel.generateContent(prompt);
       const response = await result.response;
-      const optimization = JSON.parse(response.text());
+      const optimization = this.cleanAndParseJSON(response.text());
 
       return {
         original: userQuery,
@@ -348,7 +386,7 @@ Focus on:
 
       const result = await this.generativeModel.generateContent(prompt);
       const response = await result.response;
-      const summary = JSON.parse(response.text());
+      const summary = this.cleanAndParseJSON(response.text());
 
       return summary;
     } catch (error) {

@@ -13,9 +13,9 @@ import {
   Monitor,
   Wifi,
   WifiOff,
-  RotateCcw,
 } from "lucide-react";
 import { scholarshipService } from "../services/scholarshipService";
+import { formatDateTimeIndian } from "../utils/dateUtils";
 
 interface SystemHealth {
   status: string;
@@ -59,6 +59,12 @@ const EnhancedAdminDashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string>("");
   const [realTimeUpdates, setRealTimeUpdates] = useState(true);
+
+  // AI-Enhanced Scraping State
+  const [aiSessionStatus, setAiSessionStatus] = useState<any>(null);
+  const [_aiMetrics, setAiMetrics] = useState<any>(null);
+  const [aiSessionLoading, setAiSessionLoading] = useState(false);
+  const [quickDiscoveryLoading, setQuickDiscoveryLoading] = useState(false);
 
   useEffect(() => {
     fetchAllData();
@@ -134,13 +140,108 @@ const EnhancedAdminDashboard: React.FC = () => {
         fetchCircuitBreakers(),
         fetchMetrics(),
         fetchHealth(),
+        fetchAISessionStatus(),
+        fetchAIMetrics(),
       ]);
-      setLastUpdate(new Date().toLocaleTimeString());
+      setLastUpdate(
+        new Date().toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      );
       setError(null);
     } catch (err) {
       setError("Failed to fetch system data");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // AI-Enhanced Scraping Methods
+  const fetchAISessionStatus = async () => {
+    try {
+      const data = await scholarshipService.getAISessionStatus();
+      setAiSessionStatus(data.status);
+    } catch (err) {
+      console.error("AI session status fetch error:", err);
+    }
+  };
+
+  const fetchAIMetrics = async () => {
+    try {
+      const data = await scholarshipService.getAIScrapingMetrics();
+      setAiMetrics(data.metrics);
+    } catch (err) {
+      console.error("AI metrics fetch error:", err);
+    }
+  };
+
+  const startAIEnhancedSession = async () => {
+    setAiSessionLoading(true);
+    setMessage(
+      "🤖 Starting AI-Enhanced Scraping Session... This will discover new scholarship websites and scrape them intelligently!"
+    );
+    setError(null);
+
+    try {
+      const result = await scholarshipService.startAIEnhancedSession({
+        maxWebsites: 30,
+        maxTargets: 20,
+      });
+
+      setMessage(
+        `🚀 AI-Enhanced session started! Session ID: ${result.sessionId}. This will take 15-30 minutes to complete. Monitor progress below.`
+      );
+
+      // Start polling for status updates
+      const statusInterval = setInterval(async () => {
+        try {
+          const status = await scholarshipService.getAISessionStatus();
+          setAiSessionStatus(status.status);
+
+          if (!status.status.isRunning) {
+            clearInterval(statusInterval);
+            fetchAllData(); // Refresh all data when session completes
+            setMessage(
+              "✅ AI-Enhanced scraping session completed! Check the results below."
+            );
+          }
+        } catch (err) {
+          console.error("Status polling error:", err);
+        }
+      }, 10000); // Poll every 10 seconds
+
+      setTimeout(() => clearInterval(statusInterval), 30 * 60 * 1000); // Stop polling after 30 minutes
+    } catch (err: any) {
+      setError(err.message || "Failed to start AI-enhanced scraping session");
+      console.error("AI session start error:", err);
+    } finally {
+      setAiSessionLoading(false);
+    }
+  };
+
+  const runQuickDiscovery = async () => {
+    setQuickDiscoveryLoading(true);
+    setMessage(
+      "⚡ Running Quick AI Discovery... Finding and scraping 10 high-priority websites!"
+    );
+    setError(null);
+
+    try {
+      const result = await scholarshipService.runQuickDiscovery(10);
+      setMessage(
+        `⚡ Quick discovery completed! Found ${
+          result.result?.scholarshipsFound || 0
+        } scholarships from ${result.result?.websitesScraped || 0} websites.`
+      );
+      setTimeout(fetchAllData, 2000);
+    } catch (err: any) {
+      setError(err.message || "Failed to run quick discovery");
+      console.error("Quick discovery error:", err);
+    } finally {
+      setQuickDiscoveryLoading(false);
     }
   };
 
@@ -305,17 +406,17 @@ const EnhancedAdminDashboard: React.FC = () => {
         )}
 
         {/* Enhanced Action Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
           <div
             onClick={triggerScraping}
-            className={`group cursor-pointer p-8 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] ${
+            className={`group cursor-pointer p-6 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] ${
               scrapingLoading ? "opacity-75 cursor-not-allowed" : ""
             }`}
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="p-4 bg-white/20 backdrop-blur-sm rounded-2xl group-hover:bg-white/30 transition-colors duration-200">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl group-hover:bg-white/30 transition-colors duration-200">
                 <Zap
-                  className={`h-8 w-8 ${
+                  className={`h-6 w-6 ${
                     scrapingLoading
                       ? "animate-pulse"
                       : "group-hover:animate-bounce"
@@ -323,60 +424,119 @@ const EnhancedAdminDashboard: React.FC = () => {
                 />
               </div>
               <div className="text-right">
-                <div className="text-sm font-medium text-blue-100">
-                  Action Required
+                <div className="text-xs font-medium text-blue-100">
+                  Traditional
                 </div>
-                <div className="text-xs text-blue-200">Manual Trigger</div>
+                <div className="text-xs text-blue-200">Manual</div>
               </div>
             </div>
-            <div className="space-y-3">
-              <h3 className="text-2xl font-bold">
-                {scrapingLoading
-                  ? "Scraping in Progress..."
-                  : "Trigger Live Scraping"}
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold">
+                {scrapingLoading ? "Scraping..." : "Traditional Scraping"}
               </h3>
-              <p className="text-blue-100 leading-relaxed">
-                Fetch latest scholarships from all verified sources with
-                AI-powered validation
+              <p className="text-blue-100 text-sm leading-relaxed">
+                Run existing scrapers on known scholarship websites
               </p>
-              <div className="flex items-center gap-2 text-sm text-blue-200">
-                <Globe className="h-4 w-4" />
-                <span>Multi-source data collection</span>
+            </div>
+          </div>
+
+          <div
+            onClick={startAIEnhancedSession}
+            className={`group cursor-pointer p-6 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] ${
+              aiSessionLoading ? "opacity-75 cursor-not-allowed" : ""
+            }`}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl group-hover:bg-white/30 transition-colors duration-200">
+                <Monitor
+                  className={`h-6 w-6 ${
+                    aiSessionLoading
+                      ? "animate-pulse"
+                      : "group-hover:animate-bounce"
+                  }`}
+                />
               </div>
+              <div className="text-right">
+                <div className="text-xs font-medium text-purple-100">
+                  AI-Powered
+                </div>
+                <div className="text-xs text-purple-200">Full Session</div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold">
+                {aiSessionLoading ? "AI Running..." : "AI-Enhanced Session"}
+              </h3>
+              <p className="text-purple-100 text-sm leading-relaxed">
+                Discover new websites & scrape with AI intelligence
+              </p>
+              {aiSessionStatus?.isRunning && (
+                <div className="text-xs text-purple-200 bg-white/10 px-2 py-1 rounded">
+                  {aiSessionStatus.phase}: {aiSessionStatus.progress}%
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div
+            onClick={runQuickDiscovery}
+            className={`group cursor-pointer p-6 bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] ${
+              quickDiscoveryLoading ? "opacity-75 cursor-not-allowed" : ""
+            }`}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl group-hover:bg-white/30 transition-colors duration-200">
+                <TrendingUp
+                  className={`h-6 w-6 ${
+                    quickDiscoveryLoading
+                      ? "animate-pulse"
+                      : "group-hover:animate-bounce"
+                  }`}
+                />
+              </div>
+              <div className="text-right">
+                <div className="text-xs font-medium text-emerald-100">
+                  Quick
+                </div>
+                <div className="text-xs text-emerald-200">Discovery</div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold">
+                {quickDiscoveryLoading ? "Discovering..." : "Quick Discovery"}
+              </h3>
+              <p className="text-emerald-100 text-sm leading-relaxed">
+                Fast AI discovery & scraping of top 10 websites
+              </p>
             </div>
           </div>
 
           <div
             onClick={resetCircuitBreakers}
-            className={`group cursor-pointer p-8 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] ${
+            className={`group cursor-pointer p-6 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] ${
               loading ? "opacity-75 cursor-not-allowed" : ""
             }`}
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="p-4 bg-white/20 backdrop-blur-sm rounded-2xl group-hover:bg-white/30 transition-colors duration-200">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl group-hover:bg-white/30 transition-colors duration-200">
                 <Shield
-                  className={`h-8 w-8 ${
+                  className={`h-6 w-6 ${
                     loading ? "animate-pulse" : "group-hover:animate-bounce"
                   }`}
                 />
               </div>
               <div className="text-right">
-                <div className="text-sm font-medium text-orange-100">
-                  System Recovery
+                <div className="text-xs font-medium text-orange-100">
+                  System
                 </div>
-                <div className="text-xs text-orange-200">Reset Protection</div>
+                <div className="text-xs text-orange-200">Recovery</div>
               </div>
             </div>
-            <div className="space-y-3">
-              <h3 className="text-2xl font-bold">Reset Circuit Breakers</h3>
-              <p className="text-orange-100 leading-relaxed">
-                Reset all failed scraper protection systems and restore normal
-                operation
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold">Reset Breakers</h3>
+              <p className="text-orange-100 text-sm leading-relaxed">
+                Reset failed scraper protection systems
               </p>
-              <div className="flex items-center gap-2 text-sm text-orange-200">
-                <RotateCcw className="h-4 w-4" />
-                <span>System recovery action</span>
-              </div>
             </div>
           </div>
         </div>
@@ -580,7 +740,7 @@ const EnhancedAdminDashboard: React.FC = () => {
                     </div>
                     {scraper.lastRun && (
                       <p className="text-xs text-gray-500 mt-2">
-                        Last run: {new Date(scraper.lastRun).toLocaleString()}
+                        Last run: {formatDateTimeIndian(scraper.lastRun)}
                       </p>
                     )}
                   </div>
@@ -637,7 +797,7 @@ const EnhancedAdminDashboard: React.FC = () => {
                     {breaker.lastFailure && (
                       <p className="text-xs text-gray-500 mt-2">
                         Last failure:{" "}
-                        {new Date(breaker.lastFailure).toLocaleString()}
+                        {formatDateTimeIndian(breaker.lastFailure)}
                       </p>
                     )}
                   </div>

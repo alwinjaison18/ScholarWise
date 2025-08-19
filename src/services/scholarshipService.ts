@@ -106,7 +106,9 @@ const scholarshipService = {
   // Get upcoming deadlines with fallback
   getUpcomingDeadlines: async (): Promise<Scholarship[]> => {
     try {
-      const response = await api.get("/scholarships/deadlines/upcoming");
+      const response = await api.get(
+        "/scholarships/deadlines/upcoming?days=365"
+      );
       return response.data || [];
     } catch (error) {
       console.error("Error fetching upcoming deadlines:", error);
@@ -118,14 +120,13 @@ const scholarshipService = {
   getStatistics: async () => {
     try {
       const response = await api.get("/scholarships/stats/overview");
-      return (
-        response.data || {
-          total: 0,
-          active: 0,
-          recentlyAdded: 0,
-          averageAmount: 0,
-        }
-      );
+      const data = response.data;
+      return {
+        total: data?.overview?.total || 0,
+        active: data?.overview?.total || 0, // Assuming all are active for now
+        recentlyAdded: 0, // Not provided by API
+        averageAmount: 0, // Not provided by API
+      };
     } catch (error) {
       console.error("Error fetching statistics:", error);
       return {
@@ -245,6 +246,162 @@ const scholarshipService = {
         timestamp: new Date().toISOString(),
         error: "Metrics unavailable",
       };
+    }
+  },
+
+  // === AI-Enhanced Scraping Methods ===
+
+  // Start AI-enhanced full scraping session
+  startAIEnhancedSession: async (options?: {
+    maxWebsites?: number;
+    maxTargets?: number;
+  }) => {
+    try {
+      const response = await api.post(
+        "/ai-enhanced/start-full-session",
+        options
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error starting AI-enhanced session:", error);
+      throw new Error("Failed to start AI-enhanced scraping session");
+    }
+  },
+
+  // Run quick AI discovery
+  runQuickDiscovery: async (maxWebsites = 10) => {
+    try {
+      const response = await api.post("/ai-enhanced/quick-discovery", {
+        maxWebsites,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error running quick discovery:", error);
+      throw new Error("Failed to run quick discovery");
+    }
+  },
+
+  // Get AI scraping session status
+  getAISessionStatus: async () => {
+    try {
+      const response = await api.get("/ai-enhanced/session-status");
+      return response.data;
+    } catch (error) {
+      console.error("Error getting session status:", error);
+      return {
+        success: false,
+        status: { isRunning: false },
+        error: "Failed to get session status",
+      };
+    }
+  },
+
+  // Stop current AI scraping session
+  stopAISession: async () => {
+    try {
+      const response = await api.post("/ai-enhanced/stop-session");
+      return response.data;
+    } catch (error) {
+      console.error("Error stopping AI session:", error);
+      throw new Error("Failed to stop AI scraping session");
+    }
+  },
+
+  // Get AI-enhanced scraping metrics
+  getAIScrapingMetrics: async () => {
+    try {
+      const response = await api.get("/ai-enhanced/metrics");
+      return response.data;
+    } catch (error) {
+      console.error("Error getting AI scraping metrics:", error);
+      return {
+        success: false,
+        metrics: {
+          sessionsRun: 0,
+          totalWebsitesDiscovered: 0,
+          totalScholarshipsFound: 0,
+          averageQualityScore: 0,
+        },
+        error: "Failed to get metrics",
+      };
+    }
+  },
+
+  // Discover new scholarship websites
+  discoverScholarshipWebsites: async (maxResults = 20) => {
+    try {
+      const response = await api.post("/ai-enhanced/discover-websites", {
+        maxResults,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error discovering websites:", error);
+      throw new Error("Failed to discover new scholarship websites");
+    }
+  },
+
+  // Scrape specific URLs
+  scrapeSpecificUrls: async (urls: string[]) => {
+    try {
+      const response = await api.post("/ai-enhanced/scrape-specific-urls", {
+        urls,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error scraping specific URLs:", error);
+      throw new Error("Failed to scrape specified URLs");
+    }
+  },
+
+  // Get prioritized scraping targets
+  getScrapingTargets: async (limit = 20) => {
+    try {
+      const response = await api.get(
+        `/ai-enhanced/scraping-targets?limit=${limit}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error getting scraping targets:", error);
+      throw new Error("Failed to get scraping targets");
+    }
+  },
+
+  // Get AI scraping system health
+  getAIScrapingHealth: async () => {
+    try {
+      const response = await api.get("/ai-enhanced/health");
+      return response.data;
+    } catch (error) {
+      console.error("Error getting AI scraping health:", error);
+      return {
+        success: false,
+        health: {
+          systemStatus: "unknown",
+          aiDiscoveryEnabled: false,
+          universalScrapingEnabled: false,
+          rateLimitingEnabled: false,
+        },
+        error: "Health check failed",
+      };
+    }
+  },
+
+  // Schedule recurring AI scraping sessions
+  scheduleAISession: async (schedule: {
+    frequency: "daily" | "weekly" | "monthly";
+    time: string;
+    maxWebsites?: number;
+    maxTargets?: number;
+  }) => {
+    try {
+      const response = await api.post(
+        "/ai-enhanced/schedule-session",
+        schedule
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error scheduling AI session:", error);
+      throw new Error("Failed to schedule AI scraping session");
     }
   },
 };

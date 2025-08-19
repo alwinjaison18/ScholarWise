@@ -15,7 +15,8 @@
     "count": "node production-utils.js count",
     "monitor": "node production-utils.js monitor",
     "system-check": "node production-utils.js system-check",
-    "scrape": "node production-utils.js scrape"
+    "scrape": "node src/scrapers/runScrapers.js",
+    "scrape-all": "node production-utils.js scrape"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",

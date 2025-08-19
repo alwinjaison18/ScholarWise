@@ -18,6 +18,7 @@ import {
   Star,
   Globe,
 } from "lucide-react";
+import { formatDateIndian } from "../utils/dateUtils";
 
 interface AnalyticsData {
   totalScholarships: number;
@@ -222,7 +223,12 @@ const AnalyticsPage: React.FC = () => {
                 </button>
               </div>
               <p className="text-sm text-purple-200">
-                Last updated: {lastUpdated.toLocaleTimeString()}
+                Last updated:{" "}
+                {lastUpdated.toLocaleTimeString("en-IN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
               </p>
             </div>
           </div>
@@ -527,7 +533,7 @@ const AnalyticsPage: React.FC = () => {
                         {item.title}
                       </h4>
                       <p className="text-sm text-gray-500">
-                        Deadline: {new Date(item.deadline).toLocaleDateString()}
+                        Deadline: {formatDateIndian(item.deadline)}
                       </p>
                     </div>
                   </div>

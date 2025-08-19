@@ -9,13 +9,8 @@ import {
   Clock,
   Cpu,
   MemoryStick,
-  Shield,
-  Zap,
-  Eye,
-  BarChart3,
-  TrendingUp,
-  Users,
 } from "lucide-react";
+import { formatDateTimeIndian } from "../utils/dateUtils";
 
 interface HealthStatus {
   status: string;
@@ -111,18 +106,18 @@ interface ScholarshipStats {
 const AdminDashboard: React.FC = () => {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
-  const [scrapingStatus, setScrapingStatus] = useState<ScrapingStatus | null>(
+  const [_scrapingStatus, setScrapingStatus] = useState<ScrapingStatus | null>(
     null
   );
-  const [circuitBreakers, setCircuitBreakers] =
+  const [_circuitBreakers, setCircuitBreakers] =
     useState<CircuitBreakerStatus | null>(null);
-  const [scholarshipStats, setScholarshipStats] =
+  const [_scholarshipStats, setScholarshipStats] =
     useState<ScholarshipStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [scrapingLoading, setScrapingLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [realTimeUpdates, setRealTimeUpdates] = useState(true);
+  const [realTimeUpdates] = useState(true);
 
   const API_BASE = "http://localhost:5001/api";
 
@@ -436,7 +431,7 @@ const AdminDashboard: React.FC = () => {
                   <span className="text-gray-600">Last Scraping</span>
                   <span className="text-sm">
                     {health.lastScraping
-                      ? new Date(health.lastScraping).toLocaleString()
+                      ? formatDateTimeIndian(health.lastScraping)
                       : "Never"}
                   </span>
                 </div>
@@ -542,7 +537,9 @@ const AdminDashboard: React.FC = () => {
                       <div>
                         Last Failure:{" "}
                         {breaker.lastFailureTime
-                          ? new Date(breaker.lastFailureTime).toLocaleString()
+                          ? formatDateTimeIndian(
+                              breaker.lastFailureTime.toString()
+                            )
                           : "None"}
                       </div>
                     </div>

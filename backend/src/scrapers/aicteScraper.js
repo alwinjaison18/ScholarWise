@@ -1,7 +1,15 @@
 import puppeteer from "puppeteer";
 import Scholarship from "../models/Scholarship.js";
 import axios from "axios";
+import https from "https";
 import { scrapingLogger } from "../utils/logger.js";
+
+// Create HTTPS agent that bypasses SSL certificate verification
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+  secureProtocol: "TLSv1_2_method",
+  ciphers: "ALL",
+});
 
 // Function to validate if a link is accessible
 async function validateLink(url) {
@@ -9,6 +17,7 @@ async function validateLink(url) {
     const response = await axios.head(url, {
       timeout: 10000,
       maxRedirects: 5,
+      httpsAgent: httpsAgent, // Use SSL bypass agent
       validateStatus: (status) => status < 500, // Accept redirects and client errors
     });
     return response.status < 400;
@@ -38,6 +47,10 @@ export async function scrapeAICTE() {
       "--disable-setuid-sandbox",
       "--disable-web-security",
       "--disable-features=VizDisplayCompositor",
+      "--ignore-certificate-errors", // Ignore SSL certificate errors
+      "--ignore-ssl-errors",
+      "--ignore-certificate-errors-spki-list",
+      "--disable-web-security", // Additional security bypass
     ],
   });
 

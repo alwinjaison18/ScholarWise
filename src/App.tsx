@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./contexts/AuthContext";
-import Navbar from "./components/Navbar";
+import { Navbar, Footer, ChatBot } from "./components";
 import LandingPage from "./pages/LandingPage";
 import EnhancedHomePage from "./pages/EnhancedHomePage";
 import ScholarshipsPage from "./pages/ScholarshipsPage";
@@ -17,7 +17,6 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import Footer from "./components/Footer";
 
 function AppContent() {
   const location = useLocation();
@@ -41,6 +40,7 @@ function AppContent() {
         </Routes>
       </main>
       {!isLandingPage && <Footer />}
+      <ChatBot />
       <Toaster position="top-right" />
     </div>
   );

@@ -166,9 +166,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Index for efficient queries
-userSchema.index({ email: 1 });
-userSchema.index({ googleId: 1 });
+// Index for efficient queries (only non-unique indexes needed)
 userSchema.index({ educationLevel: 1, interestedCategories: 1 });
 
 // Hash password before saving

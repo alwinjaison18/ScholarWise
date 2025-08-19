@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useScholarships } from "../hooks/useScholarships";
+import { formatDateLong, getTimeLeftFromDeadline } from "../utils/dateUtils";
 
 const ScholarshipsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,23 +68,11 @@ const ScholarshipsPage: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-IN", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return formatDateLong(dateString);
   };
 
   const getTimeLeft = (deadline: string) => {
-    const now = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) return "Expired";
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "1 day left";
-    return `${diffDays} days left`;
+    return getTimeLeftFromDeadline(deadline);
   };
 
   return (

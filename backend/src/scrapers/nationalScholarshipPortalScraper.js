@@ -16,6 +16,10 @@ export async function scrapeNationalScholarshipPortal() {
         "--disable-setuid-sandbox",
         "--disable-web-security",
         "--disable-features=VizDisplayCompositor",
+        "--ignore-certificate-errors", // Ignore SSL certificate errors
+        "--ignore-ssl-errors",
+        "--ignore-certificate-errors-spki-list",
+        "--disable-web-security", // Additional security bypass
       ],
     });
 

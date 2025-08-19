@@ -158,9 +158,6 @@ router.get("/stats/overview", async (req, res) => {
           total: { $sum: 1 },
           categories: { $addToSet: "$category" },
           providers: { $addToSet: "$provider" },
-          avgAmount: {
-            $avg: { $toDouble: { $regex: { input: "$amount", regex: /\d+/ } } },
-          },
         },
       },
     ]);

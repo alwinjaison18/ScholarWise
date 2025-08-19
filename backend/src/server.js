@@ -12,6 +12,8 @@ import realTimeScholarshipRoutes from "./routes/realTimeScholarships.js";
 import scraperRoutes from "./routes/scrapers.js";
 import aiEnhancedRoutes from "./routes/aiEnhanced.js";
 import geminiAIRoutes from "./routes/geminiAI.js";
+import aiEnhancedScrapingRoutes from "./routes/aiEnhancedScraping.js"; // New AI-enhanced scraping routes
+import chatbotRoutes from "./routes/chatbot.js"; // AI Chatbot routes
 import {
   scheduleRealTimeScraping,
   triggerImmediateScraping,
@@ -26,7 +28,7 @@ import Scholarship from "./models/Scholarship.js"; // Import Scholarship model f
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001; // Updated default port
+const PORT = process.env.PORT || 5002; // Updated to avoid port conflict
 
 // Rate limiting middleware
 const limiter = rateLimit({
@@ -199,6 +201,8 @@ app.use("/api/scholarships", realTimeScholarshipRoutes);
 app.use("/api/scrapers", scraperRoutes);
 app.use("/api/ai", aiEnhancedRoutes);
 app.use("/api/gemini", geminiAIRoutes);
+app.use("/api/ai-enhanced", aiEnhancedScrapingRoutes); // New AI-enhanced scraping API routes
+app.use("/api/chatbot", chatbotRoutes); // AI Chatbot API routes
 
 // AI-Enhanced Analytics and Management Endpoints
 app.get("/api/ai/analytics", async (req, res) => {
@@ -619,3 +623,4 @@ async function optimizeScrapingSchedule() {
     };
   }
 }
+ 

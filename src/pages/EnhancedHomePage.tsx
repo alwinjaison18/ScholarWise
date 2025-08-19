@@ -20,10 +20,12 @@ import {
   CheckCircle,
   Eye,
   Bookmark,
+  Shield,
 } from "lucide-react";
 import type { Scholarship } from "../services/scholarshipService";
 import { scholarshipService } from "../services/scholarshipService";
 import { useAuth } from "../contexts/AuthContext";
+import { formatDeadlineDisplay } from "../utils/dateUtils";
 
 const EnhancedHomePage: React.FC = () => {
   const [featuredScholarships, setFeaturedScholarships] = useState<
@@ -90,30 +92,52 @@ const EnhancedHomePage: React.FC = () => {
   };
 
   const formatDeadline = (deadline: string) => {
-    const date = new Date(deadline);
-    const now = new Date();
-    const diffTime = date.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays <= 0) return "Deadline passed";
-    if (diffDays === 1) return "Due tomorrow";
-    if (diffDays <= 7) return `${diffDays} days left`;
-    if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} weeks left`;
-    return date.toLocaleDateString();
+    return formatDeadlineDisplay(deadline);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Enhanced Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background Elements */}
+      {/* Hero Section with Enhanced Visual Design */}
+      <section className="relative overflow-hidden min-h-screen flex items-center">
+        {/* Enhanced Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse animation-delay-2000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse animation-delay-4000"></div>
+          {/* Animated gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-blue-900"></div>
+
+          {/* Floating elements */}
+          <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-pulse"></div>
+          <div
+            className="absolute top-1/4 right-20 w-48 h-48 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-pulse"
+            style={{ animationDelay: "2s" }}
+          ></div>
+          <div
+            className="absolute bottom-1/4 left-1/4 w-40 h-40 bg-gradient-to-r from-green-400 to-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-pulse"
+            style={{ animationDelay: "4s" }}
+          ></div>
+          <div
+            className="absolute bottom-10 right-1/3 w-36 h-36 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-pulse"
+            style={{ animationDelay: "6s" }}
+          ></div>
+
+          {/* Geometric patterns */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-10">
+            <div className="absolute top-20 left-20 w-2 h-2 bg-white rounded-full animate-ping"></div>
+            <div
+              className="absolute top-40 right-40 w-1 h-1 bg-yellow-300 rounded-full animate-ping"
+              style={{ animationDelay: "1s" }}
+            ></div>
+            <div
+              className="absolute bottom-40 left-40 w-1.5 h-1.5 bg-green-300 rounded-full animate-ping"
+              style={{ animationDelay: "3s" }}
+            ></div>
+            <div
+              className="absolute bottom-20 right-20 w-2 h-2 bg-purple-300 rounded-full animate-ping"
+              style={{ animationDelay: "5s" }}
+            ></div>
+          </div>
         </div>
 
-        <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white">
+        <div className="relative w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div
               className={`text-center transform transition-all duration-1000 ${
@@ -122,81 +146,147 @@ const EnhancedHomePage: React.FC = () => {
                   : "translate-y-10 opacity-0"
               }`}
             >
-              {/* Welcome Message */}
+              {/* Enhanced Welcome Message */}
               {user && (
-                <div className="mb-6">
-                  <p className="text-blue-200 text-lg">Welcome back,</p>
-                  <h1 className="text-3xl font-bold text-yellow-300">
+                <div className="mb-8 animate-fade-in">
+                  <div className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-4">
+                    <Star className="w-5 h-5 text-yellow-300 mr-2" />
+                    <p className="text-blue-200 text-body font-medium">
+                      Welcome back,
+                    </p>
+                  </div>
+                  <h1 className="text-display font-bold bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 bg-clip-text text-transparent mt-2">
                     {user.firstName}!
                   </h1>
                 </div>
               )}
 
-              <div className="mb-8">
+              <div className="mb-12 space-y-8">
                 <h1
-                  className={`text-4xl md:text-6xl font-bold mb-6 ${
-                    user ? "text-2xl md:text-4xl" : ""
+                  className={`font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent leading-tight ${
+                    user
+                      ? "text-display-sm md:text-display lg:text-display-lg"
+                      : "text-display md:text-display-lg lg:text-6xl"
                   }`}
                 >
                   {user
                     ? "Your Scholarship Dashboard"
-                    : "Find Your Perfect Scholarship"}
+                    : "Unlock Your Academic Future"}
                 </h1>
-                <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed">
-                  Discover{" "}
-                  <span className="text-yellow-300 font-semibold">
-                    verified scholarships
-                  </span>{" "}
-                  for Indian students. All application links{" "}
-                  <span className="text-green-300 font-semibold">
-                    tested and validated
-                  </span>{" "}
-                  for your success.
-                </p>
+
+                <div className="space-y-6">
+                  <p className="text-body-lg md:text-heading-sm lg:text-heading mb-8 max-w-4xl mx-auto leading-relaxed text-blue-100/90">
+                    Discover{" "}
+                    <span className="relative">
+                      <span className="text-yellow-300 font-semibold bg-yellow-300/20 px-2 py-1 rounded-lg">
+                        verified scholarships
+                      </span>
+                    </span>{" "}
+                    for Indian students. All application links{" "}
+                    <span className="relative">
+                      <span className="text-green-300 font-semibold bg-green-300/20 px-2 py-1 rounded-lg">
+                        tested and validated
+                      </span>
+                    </span>{" "}
+                    for your success.
+                  </p>
+
+                  {/* Trust indicators */}
+                  <div className="flex flex-wrap justify-center gap-6 text-sm text-blue-200/80">
+                    <div className="flex items-center space-x-2">
+                      <Shield className="w-4 h-4 text-green-300" />
+                      <span>100% Verified Links</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Clock className="w-4 h-4 text-yellow-300" />
+                      <span>Real-time Updates</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Heart className="w-4 h-4 text-pink-300" />
+                      <span>AI-Powered Matching</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Quick Stats Banner */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-2xl font-bold text-yellow-300">
+              {/* Enhanced Quick Stats Banner */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12 max-w-6xl mx-auto">
+                <div className="group bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="flex items-center justify-center mb-3">
+                    <div className="p-3 bg-yellow-400/20 rounded-xl">
+                      <BookOpen className="w-6 h-6 text-yellow-300" />
+                    </div>
+                  </div>
+                  <div className="text-2xl lg:text-3xl font-bold text-yellow-300 mb-2">
                     {stats.total}+
                   </div>
-                  <div className="text-sm text-blue-200">Live Scholarships</div>
+                  <div className="text-sm lg:text-body text-blue-200 font-medium">
+                    Live Scholarships
+                  </div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-2xl font-bold text-green-300">
+
+                <div className="group bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="flex items-center justify-center mb-3">
+                    <div className="p-3 bg-green-400/20 rounded-xl">
+                      <CheckCircle className="w-6 h-6 text-green-300" />
+                    </div>
+                  </div>
+                  <div className="text-2xl lg:text-3xl font-bold text-green-300 mb-2">
                     {stats.active}
                   </div>
-                  <div className="text-sm text-blue-200">Active Today</div>
+                  <div className="text-sm lg:text-body text-blue-200 font-medium">
+                    Active Today
+                  </div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-2xl font-bold text-purple-300">
+
+                <div className="group bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="flex items-center justify-center mb-3">
+                    <div className="p-3 bg-purple-400/20 rounded-xl">
+                      <Award className="w-6 h-6 text-purple-300" />
+                    </div>
+                  </div>
+                  <div className="text-2xl lg:text-3xl font-bold text-purple-300 mb-2">
                     ₹50Cr+
                   </div>
-                  <div className="text-sm text-blue-200">Total Value</div>
+                  <div className="text-sm lg:text-body text-blue-200 font-medium">
+                    Total Value
+                  </div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-2xl font-bold text-orange-300">6</div>
-                  <div className="text-sm text-blue-200">Verified Sources</div>
+
+                <div className="group bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="flex items-center justify-center mb-3">
+                    <div className="p-3 bg-orange-400/20 rounded-xl">
+                      <Globe className="w-6 h-6 text-orange-300" />
+                    </div>
+                  </div>
+                  <div className="text-2xl lg:text-3xl font-bold text-orange-300 mb-2">
+                    6
+                  </div>
+                  <div className="text-sm lg:text-body text-blue-200 font-medium">
+                    Verified Sources
+                  </div>
                 </div>
               </div>
 
               {/* Enhanced CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-2xl mx-auto">
                 <Link
                   to="/scholarships"
-                  className="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                  className="group relative bg-gradient-to-r from-white to-blue-50 text-blue-600 px-8 py-4 rounded-2xl text-body font-semibold hover:from-blue-50 hover:to-white transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center space-x-3 border border-white/20"
                 >
-                  <Search className="h-5 w-5 group-hover:rotate-12 transition-transform" />
-                  <span>Explore Scholarships</span>
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Search className="h-5 w-5 group-hover:rotate-12 transition-transform relative z-10" />
+                  <span className="relative z-10">Explore Scholarships</span>
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform relative z-10" />
                 </Link>
+
                 <Link
                   to="/dashboard"
-                  className="group border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                  className="group relative border-2 border-white/30 text-white px-8 py-4 rounded-2xl text-body font-semibold hover:bg-white/10 backdrop-blur-md transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center space-x-3"
                 >
                   <Award className="h-5 w-5 group-hover:rotate-12 transition-transform" />
                   <span>My Dashboard</span>
+                  <TrendingUp className="h-5 w-5 group-hover:translate-y-1 transition-transform" />
                 </Link>
               </div>
             </div>
@@ -205,23 +295,24 @@ const EnhancedHomePage: React.FC = () => {
       </section>
 
       {/* Enhanced Live Statistics */}
-      <section className="py-16 bg-white relative">
+      <section className="py-20 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center space-x-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center space-x-2 bg-green-100 text-green-800 px-5 py-3 rounded-full text-body-sm font-medium mb-6">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span>Live Data</span>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-display-sm font-bold text-gray-900 mb-6">
               Real-time Scholarship Statistics
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Updated every hour from our verified scholarship database
+            <p className="text-body-lg text-gray-600 max-w-3xl mx-auto">
+              Updated every hour from our verified scholarship database with
+              comprehensive validation
             </p>
           </div>
 
           {loading ? (
-            <div className="grid md:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-4 gap-8">
               {[...Array(4)].map((_, i) => (
                 <div
                   key={i}
@@ -234,24 +325,26 @@ const EnhancedHomePage: React.FC = () => {
               ))}
             </div>
           ) : error ? (
-            <div className="text-center py-16">
-              <div className="bg-red-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
-                <AlertCircle className="h-10 w-10 text-red-500" />
+            <div className="text-center py-20">
+              <div className="bg-red-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-8">
+                <AlertCircle className="h-12 w-12 text-red-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-heading font-semibold text-gray-900 mb-4">
                 Unable to Load Data
               </h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">{error}</p>
+              <p className="text-body text-gray-600 mb-8 max-w-md mx-auto">
+                {error}
+              </p>
               <button
                 onClick={fetchHomePageData}
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg"
+                className="inline-flex items-center space-x-3 px-8 py-4 bg-blue-600 text-white text-body font-medium rounded-xl hover:bg-blue-700 transition-colors shadow-lg"
               >
-                <RefreshCw className="h-4 w-4" />
+                <RefreshCw className="h-5 w-5" />
                 <span>Try Again</span>
               </button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-4 gap-8">
               {[
                 {
                   label: "Total Scholarships",
@@ -288,14 +381,16 @@ const EnhancedHomePage: React.FC = () => {
                     key={index}
                     className={`bg-gradient-to-br ${stat.gradient} p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-white group`}
                   >
-                    <div className="flex items-center justify-between mb-4">
-                      <Icon className="h-8 w-8 text-white/80 group-hover:text-white transition-colors" />
-                      <div className="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
-                        <TrendingUp className="h-4 w-4" />
+                    <div className="flex items-center justify-between mb-6">
+                      <Icon className="h-10 w-10 text-white/80 group-hover:text-white transition-colors" />
+                      <div className="bg-white/20 p-3 rounded-lg group-hover:bg-white/30 transition-colors">
+                        <TrendingUp className="h-5 w-5" />
                       </div>
                     </div>
-                    <div className="text-3xl font-bold mb-2">{stat.value}</div>
-                    <div className="text-white/80 text-sm font-medium">
+                    <div className="text-display-sm font-bold mb-3">
+                      {stat.value}
+                    </div>
+                    <div className="text-white/90 text-body font-medium">
                       {stat.label}
                     </div>
                   </div>
@@ -310,14 +405,14 @@ const EnhancedHomePage: React.FC = () => {
       <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-body-sm font-medium mb-6">
               <Star className="w-4 h-4" />
               <span>Featured Opportunities</span>
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-display-sm font-bold text-gray-900 mb-6">
               Latest Verified Scholarships
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-body-lg text-gray-600 max-w-3xl mx-auto">
               Fresh opportunities with{" "}
               <span className="text-green-600 font-semibold">
                 verified application links
@@ -374,10 +469,10 @@ const EnhancedHomePage: React.FC = () => {
               <div className="bg-blue-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-8">
                 <BookOpen className="h-12 w-12 text-blue-500" />
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+              <h3 className="text-heading font-semibold text-gray-900 mb-4">
                 Scholarships Loading
               </h3>
-              <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+              <p className="text-body-lg text-gray-600 mb-8 max-w-md mx-auto">
                 Our AI scrapers are working to fetch the latest verified
                 scholarships for you.
               </p>
@@ -410,20 +505,24 @@ const EnhancedHomePage: React.FC = () => {
                   {/* Scholarship Header */}
                   <div className="flex items-start justify-between mb-6">
                     <div className="flex items-center space-x-2">
-                      <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm rounded-full font-medium">
+                      <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-body-sm rounded-full font-medium">
                         {scholarship.category}
                       </span>
                       {index < 3 && (
                         <div className="flex items-center space-x-1 text-yellow-500">
                           <Star className="h-4 w-4 fill-current" />
-                          <span className="text-xs font-medium">Featured</span>
+                          <span className="text-caption font-medium">
+                            Featured
+                          </span>
                         </div>
                       )}
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className="flex items-center space-x-1 text-green-600">
                         <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-xs font-medium">Verified</span>
+                        <span className="text-caption font-medium">
+                          Verified
+                        </span>
                       </div>
                       <button className="text-gray-400 hover:text-red-500 transition-colors">
                         <Heart className="h-5 w-5" />
@@ -432,11 +531,11 @@ const EnhancedHomePage: React.FC = () => {
                   </div>
 
                   {/* Scholarship Content */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-heading font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     {scholarship.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-6 line-clamp-3 leading-relaxed">
+                  <p className="text-body text-gray-600 mb-6 line-clamp-3 leading-relaxed">
                     {scholarship.description}
                   </p>
 
@@ -445,16 +544,16 @@ const EnhancedHomePage: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 text-gray-500">
                         <Award className="h-4 w-4" />
-                        <span className="text-sm">Amount</span>
+                        <span className="text-body-sm">Amount</span>
                       </div>
-                      <span className="font-bold text-green-600 text-lg">
+                      <span className="font-bold text-green-600 text-body-lg">
                         {formatCurrency(scholarship.amount)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 text-gray-500">
                         <Clock className="h-4 w-4" />
-                        <span className="text-sm">Deadline</span>
+                        <span className="text-body-sm">Deadline</span>
                       </div>
                       <span className="font-semibold text-red-600">
                         {formatDeadline(scholarship.deadline)}
@@ -463,7 +562,7 @@ const EnhancedHomePage: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 text-gray-500">
                         <GraduationCap className="h-4 w-4" />
-                        <span className="text-sm">Level</span>
+                        <span className="text-body-sm">Level</span>
                       </div>
                       <span className="text-gray-700 capitalize font-medium">
                         {scholarship.educationLevel}
@@ -473,7 +572,7 @@ const EnhancedHomePage: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2 text-gray-500">
                           <MapPin className="h-4 w-4" />
-                          <span className="text-sm">Location</span>
+                          <span className="text-body-sm">Location</span>
                         </div>
                         <span className="text-gray-700 font-medium">
                           {scholarship.state}
@@ -504,7 +603,7 @@ const EnhancedHomePage: React.FC = () => {
           <div className="text-center mt-16">
             <Link
               to="/scholarships"
-              className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-semibold text-lg"
+              className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-semibold text-body-lg"
             >
               <Search className="h-6 w-6" />
               <span>Explore All Scholarships</span>
@@ -530,10 +629,10 @@ const EnhancedHomePage: React.FC = () => {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-display-sm font-bold text-gray-900 mb-6">
               Why Choose ScholarWise India?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-body-lg text-gray-600 max-w-3xl mx-auto">
               We ensure every scholarship is{" "}
               <span className="text-blue-600 font-semibold">real</span>,
               <span className="text-green-600 font-semibold"> verified</span>,
@@ -592,17 +691,17 @@ const EnhancedHomePage: React.FC = () => {
                   >
                     <Icon className="h-10 w-10 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  <h3 className="text-heading font-bold text-gray-900 mb-4">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                  <p className="text-body text-gray-600 mb-6 leading-relaxed">
                     {feature.description}
                   </p>
                   <div className="space-y-2">
                     {feature.features.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-center space-x-2 text-sm text-gray-500"
+                        className="flex items-center justify-center space-x-2 text-body-sm text-gray-500"
                       >
                         <CheckCircle
                           className={`h-4 w-4 text-${feature.color}-500`}
@@ -623,14 +722,14 @@ const EnhancedHomePage: React.FC = () => {
         <section className="py-20 bg-gradient-to-br from-red-50 to-orange-50 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center space-x-2 bg-red-100 text-red-800 px-4 py-2 rounded-full text-body-sm font-medium mb-6">
                 <AlertCircle className="w-4 h-4" />
                 <span>Urgent Deadlines</span>
               </div>
-              <h2 className="text-4xl font-bold text-red-900 mb-6">
+              <h2 className="text-display-sm font-bold text-red-900 mb-6">
                 ⚠️ Don't Miss These Opportunities
               </h2>
-              <p className="text-xl text-red-700 max-w-3xl mx-auto">
+              <p className="text-body-lg text-red-700 max-w-3xl mx-auto">
                 Scholarships with approaching deadlines - apply now before it's
                 too late!
               </p>
@@ -643,7 +742,7 @@ const EnhancedHomePage: React.FC = () => {
                   className="bg-white border-2 border-red-200 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group"
                 >
                   {/* Urgency Indicator */}
-                  <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-2 rounded-bl-2xl text-sm font-bold">
+                  <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-2 rounded-bl-2xl text-body-sm font-bold">
                     URGENT
                   </div>
 
@@ -652,36 +751,36 @@ const EnhancedHomePage: React.FC = () => {
                       <Clock className="h-6 w-6 text-red-500" />
                     </div>
                     <div>
-                      <div className="text-red-600 font-bold text-lg">
+                      <div className="text-red-600 font-bold text-body-lg">
                         {formatDeadline(scholarship.deadline)}
                       </div>
-                      <div className="text-red-500 text-sm">
+                      <div className="text-red-500 text-body-sm">
                         Application deadline
                       </div>
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-red-600 transition-colors">
+                  <h3 className="text-heading font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-red-600 transition-colors">
                     {scholarship.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-6 line-clamp-3">
+                  <p className="text-body text-gray-600 mb-6 line-clamp-3">
                     {scholarship.description}
                   </p>
 
                   <div className="flex items-center justify-between mb-6">
-                    <div className="text-lg font-bold text-green-600">
+                    <div className="text-body-lg font-bold text-green-600">
                       {formatCurrency(scholarship.amount)}
                     </div>
                     <div className="flex items-center space-x-1 text-green-600">
                       <CheckCircle className="h-4 w-4" />
-                      <span className="text-sm">Verified</span>
+                      <span className="text-body-sm">Verified</span>
                     </div>
                   </div>
 
                   <Link
                     to={`/scholarship/${scholarship._id}`}
-                    className="block w-full text-center px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl"
+                    className="block w-full text-center px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-bold text-body-lg shadow-lg hover:shadow-xl"
                   >
                     Apply Now
                   </Link>
@@ -715,10 +814,10 @@ const EnhancedHomePage: React.FC = () => {
 
         <div className="relative max-w-6xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-display md:text-display-lg font-bold text-white mb-6">
               Ready to Find Your Scholarship?
             </h2>
-            <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-body-lg md:text-heading-sm text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed">
               Join{" "}
               <span className="text-yellow-300 font-bold">
                 thousands of students
@@ -740,10 +839,10 @@ const EnhancedHomePage: React.FC = () => {
                 key={index}
                 className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20"
               >
-                <div className="text-2xl font-bold text-yellow-300 mb-2">
+                <div className="text-heading font-bold text-yellow-300 mb-2">
                   {metric.number}
                 </div>
-                <div className="text-blue-200 text-sm">{metric.label}</div>
+                <div className="text-blue-200 text-body-sm">{metric.label}</div>
               </div>
             ))}
           </div>
@@ -751,7 +850,7 @@ const EnhancedHomePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
               to="/scholarships"
-              className="group bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl flex items-center justify-center space-x-3"
+              className="group bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold text-body-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl flex items-center justify-center space-x-3"
             >
               <Search className="h-6 w-6 group-hover:rotate-12 transition-transform" />
               <span>Start Your Search</span>
@@ -759,7 +858,7 @@ const EnhancedHomePage: React.FC = () => {
             </Link>
             <Link
               to="/dashboard"
-              className="group border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl flex items-center justify-center space-x-3"
+              className="group border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-body-lg hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl flex items-center justify-center space-x-3"
             >
               <Award className="h-6 w-6 group-hover:rotate-12 transition-transform" />
               <span>My Dashboard</span>
@@ -768,7 +867,7 @@ const EnhancedHomePage: React.FC = () => {
 
           {/* Trust Indicators */}
           <div className="mt-12 pt-8 border-t border-white/20">
-            <p className="text-blue-200 text-sm mb-4">
+            <p className="text-blue-200 text-body-sm mb-4">
               Trusted by students from
             </p>
             <div className="flex flex-wrap justify-center items-center space-x-8 text-white/80">
